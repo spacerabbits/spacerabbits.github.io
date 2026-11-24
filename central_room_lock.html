@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<title data-ru="Центральный зал: обезвреживание бомбы и спасение растений" data-he="חדר מרכזי: נטרול פצצה והצלת צמחים">Центральный зал: обезвреживание бомбы и спасение растений</title>
+<style>
+  body { font-family: 'Assistant', 'Rubik', Arial, sans-serif; background: #e8f5e9; color: #1b2e1e; margin: 0; padding: 18px; }
+  .box { max-width: 580px; margin: auto; background: #fff; border-radius: 16px; padding: 22px; border: 3px solid #1b5e20; text-align: center; }
+  .top-bar { display: flex; justify-content: flex-end; margin-bottom: 8px; }
+  
+  .lang-group { display: inline-flex; gap: 6px; align-items: center; }
+  .lang-btn { background: #ffffff; color: #1b5e20; border: 2px solid #2e7d32; padding: 6px 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px; }
+  .lang-btn.active-lang { background: #1b5e20; color: #ffffff; border-color: #ffffff; }
+
+  .timer-panel { background: #ffebee; border: 2px solid #ef5350; border-radius: 12px; padding: 12px; margin: 14px 0; }
+  .timer-val { font-size: 32px; font-weight: bold; color: #c62828; font-family: monospace; }
+  .t-btn { background: #37474f; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; margin: 4px; font-size: 13px; }
+  .collected-box { background: #f1f8e9; border: 1px dashed #4caf50; border-radius: 10px; padding: 10px; margin: 12px 0; font-size: 15px; min-height: 22px; }
+  input { font-size: 22px; padding: 9px; width: 220px; text-align: center; border-radius: 10px; border: 2px solid #2e7d32; letter-spacing: 3px; direction: ltr; unicode-bidi: isolate; }
+  .btn { background: #1b5e20; color: #fff; border: none; padding: 10px 22px; font-size: 17px; border-radius: 10px; cursor: pointer; margin-top: 10px; }
+  .msg { font-size: 17px; font-weight: bold; margin-top: 14px; min-height: 24px; }
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="top-bar">
+    <div class="lang-group">
+      <button class="lang-btn lang-btn-ru active-lang" onclick="setLang('ru')">🇷🇺 Русский</button>
+      <button class="lang-btn lang-btn-he" onclick="setLang('he')">🇮🇱 עברית</button>
+    </div>
+  </div>
+  <h2 data-ru="Центральный зал: обезвреживание бомбы и спасение растений" data-he="חדר מרכזי: נטרול פצצה והצלת הצמחים">Центральный зал: обезвреживание бомбы и спасение растений</h2>
+  <p data-ru="Введите полный код, чтобы обезвредить бомбу и спасти редкие растения в лаборатории (ошибка = -20 сек.):" data-he="הזינו את הקוד המלא לנטרול הפצצה והצלת הצמחים הנדירים במעבדה (טעות = -20 שניות):">Введите полный код, чтобы обезвредить бомбу и спасти редкие растения в лаборатории (ошибка = -20 сек.):</p>
+  <div class="timer-panel">
+    <div>⏱️ <span class="timer-val" id="timer">07:50</span></div>
+    <button class="t-btn" onclick="startTimer()" data-ru="Пуск" data-he="הפעל">Пуск</button>
+    <button class="t-btn" onclick="pauseTimer()" data-ru="Пауза" data-he="השהה">Пауза</button>
+    <button class="t-btn" onclick="resetTimer()" data-ru="Сброс 07:50" data-he="אפס 07:50">Сброс 07:50</button>
+  </div>
+  <div class="collected-box" id="collected-digits"></div>
+  <input id="code" type="text" maxlength="8" placeholder="________" dir="ltr" />
+  <br>
+  <button class="btn" onclick="checkFinal()" data-ru="Обезвредить бомбу" data-he="נטרל פצצה">Обезвредить бомбу</button>
+  <div class="msg" id="msg"></div>
+</div>
+<script>
+
+const PENALTY_SEC = 20;
+const INITIAL_SEC = 7 * 60 + 50;
+
+function getLang() {
+  const saved = localStorage.getItem('codeNatureLang');
+  if (saved === 'he' || saved === 'ru') return saved;
+  localStorage.setItem('codeNatureLang', 'ru');
+  return 'ru';
+}
+
+function setLang(lang) {
+  const normalized = lang === 'he' ? 'he' : 'ru';
+  localStorage.setItem('codeNatureLang', normalized);
+  window.dispatchEvent(new CustomEvent('codeNatureLangChanged', { detail: normalized }));
+  applyLangDOM(normalized);
+}
+
+function applyLangDOM(lang) {
+  const isRu = lang === 'ru';
+  document.documentElement.lang = isRu ? 'ru' : 'he';
+  document.documentElement.dir = isRu ? 'ltr' : 'rtl';
+  document.querySelectorAll('[data-ru]').forEach((el) => {
+    const val = isRu ? el.getAttribute('data-ru') : el.getAttribute('data-he');
+    if (val !== null) {
+      if (el.getAttribute('data-html') === '1') {
+        el.innerHTML = val;
+      } else {
+        el.textContent = val;
+      }
+    }
+  });
+  document.querySelectorAll('.lang-btn-ru').forEach((b) => {
+    b.classList.toggle('active-lang', isRu);
+  });
+  document.querySelectorAll('.lang-btn-he').forEach((b) => {
+    b.classList.toggle('active-lang', !isRu);
+  });
+}
+
+function getRemainingSec() {
+  const saved = localStorage.getItem('codeNatureTimerSec');
+  if (saved === null) {
+    localStorage.setItem('codeNatureTimerSec', String(INITIAL_SEC));
+    return INITIAL_SEC;
+  }
+  const n = parseInt(saved, 10);
+  return Number.isNaN(n) ? INITIAL_SEC : Math.max(0, n);
+}
+
+function setRemainingSec(sec) {
+  const clamped = Math.max(0, sec);
+  localStorage.setItem('codeNatureTimerSec', String(clamped));
+  window.dispatchEvent(new CustomEvent('codeNatureTimerUpdated', { detail: clamped }));
+  return clamped;
+}
+
+function applyWrongPenalty() {
+  const cur = getRemainingSec();
+  return setRemainingSec(cur - PENALTY_SEC);
+}
+
+function markRoomSolved(roomNum, payload) {
+  const solved = JSON.parse(localStorage.getItem('codeNatureSolvedRooms') || '{}');
+  solved[roomNum] = payload || true;
+  localStorage.setItem('codeNatureSolvedRooms', JSON.stringify(solved));
+  window.dispatchEvent(new CustomEvent('codeNatureProgressUpdated', { detail: solved }));
+}
+
+function getSolvedRooms() {
+  return JSON.parse(localStorage.getItem('codeNatureSolvedRooms') || '{}');
+}
+
+function formatSec(sec) {
+  const m = String(Math.floor(sec / 60)).padStart(2, '0');
+  const s = String(sec % 60).padStart(2, '0');
+  return `${m}:${s}`;
+}
+
+
+const FINAL_CODE = "42751984";
+let totalSec = getRemainingSec();
+let timerId = null;
+
+function updateCollectedDisplay() {
+  const solved = getSolvedRooms();
+  const lang = getLang();
+  const parts = [];
+  if (solved[1]) parts.push((lang === 'ru' ? 'Задание 1: ' : 'משימה 1: ') + solved[1].digits);
+  if (solved[2]) parts.push((lang === 'ru' ? 'Задание 2: ' : 'משימה 2: ') + solved[2].digits);
+  if (solved[3]) parts.push((lang === 'ru' ? 'Задание 3: ' : 'משימה 3: ') + solved[3].digits);
+  if (solved[4]) parts.push((lang === 'ru' ? 'Задание 4: ' : 'משימה 4: ') + solved[4].digits);
+  const el = document.getElementById('collected-digits');
+  el.textContent = parts.length === 0
+    ? ''
+    : (lang === 'ru' ? 'Открытые цифры: ' : 'הספרות שנפתחו: ') + parts.join(' | ');
+}
+
+function renderTime() {
+  document.getElementById('timer').textContent = formatSec(totalSec);
+}
+
+function startTimer() {
+  if (timerId !== null) return;
+  timerId = setInterval(() => {
+    totalSec = getRemainingSec();
+    if (totalSec <= 0) {
+      clearInterval(timerId);
+      timerId = null;
+      setRemainingSec(0);
+      renderTime();
+      const lang = getLang();
+      document.getElementById('msg').style.color = '#c62828';
+      document.getElementById('msg').textContent = lang === 'ru'
+        ? '⛔ Время вышло! Бомба сработала, растения в лаборатории пострадали.'
+        : '⛔ הזמן הסתיים! הפצצה הופעלה והצמחים במעבדה נפגעו.';
+      return;
+    }
+    totalSec = setRemainingSec(totalSec - 1);
+    renderTime();
+  }, 1000);
+}
+
+function pauseTimer() {
+  if (timerId !== null) {
+    clearInterval(timerId);
+    timerId = null;
+  }
+}
+
+function resetTimer() {
+  pauseTimer();
+  localStorage.removeItem('codeNatureSolvedRooms');
+  totalSec = setRemainingSec(INITIAL_SEC);
+  renderTime();
+  updateCollectedDisplay();
+  document.getElementById('msg').textContent = '';
+}
+
+window.addEventListener('storage', () => {
+  totalSec = getRemainingSec();
+  renderTime();
+  updateCollectedDisplay();
+  applyLangDOM(getLang());
+});
+window.addEventListener('codeNatureTimerUpdated', (e) => {
+  totalSec = e.detail;
+  renderTime();
+});
+window.addEventListener('codeNatureProgressUpdated', updateCollectedDisplay);
+window.addEventListener('codeNatureLangChanged', (e) => {
+  applyLangDOM(e.detail);
+  updateCollectedDisplay();
+});
+
+window.addEventListener('load', () => {
+  totalSec = getRemainingSec();
+  renderTime();
+  applyLangDOM(getLang());
+  updateCollectedDisplay();
+  startTimer();
+});
+
+function checkFinal() {
+  const val = document.getElementById('code').value.trim();
+  const msg = document.getElementById('msg');
+  const lang = getLang();
+  if (val === FINAL_CODE) {
+    pauseTimer();
+    msg.style.color = '#1b5e20';
+    msg.textContent = lang === 'ru'
+      ? '🎉 Победа! Бомба обезврежена, редкие растения в лаборатории спасены!'
+      : '🎉 ניצחון! הפצצה נוטרלה והצמחים הנדירים במעבדה ניצלו!';
+  } else {
+    totalSec = applyWrongPenalty();
+    renderTime();
+    msg.style.color = '#c62828';
+    msg.textContent = lang === 'ru'
+      ? '❌ Неверный код! Списано 20 секунд с таймера.'
+      : '❌ קוד שגוי! ירדו 20 שניות מהטיימר.';
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<title data-ru="Задание 3: Зелёное сканирование" data-he="משימה 3: סריקה ירוקה">Задание 3: Зелёное сканирование</title>
+<style>
+  body { font-family: 'Assistant', 'Rubik', Arial, sans-serif; background: #f3e5f5; color: #2a1033; margin: 0; padding: 18px; }
+  .box { max-width: 780px; margin: auto; background: #fff; border-radius: 14px; padding: 20px; border: 2px solid #6a1b9a; }
+  .top-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+  .timer-pill { font-weight: bold; font-size: 17px; color: #c62828; background: #ffebee; border: 1px solid #ef5350; padding: 6px 12px; border-radius: 8px; font-family: monospace; }
+  
+  .lang-group { display: inline-flex; gap: 6px; align-items: center; }
+  .lang-btn { background: #ffffff; color: #1b5e20; border: 2px solid #2e7d32; padding: 6px 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px; }
+  .lang-btn.active-lang { background: #1b5e20; color: #ffffff; border-color: #ffffff; }
+
+  .qr-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 16px 0; text-align: center; direction: ltr; }
+  .qr-card { border: 2px solid #8e24aa; border-radius: 12px; padding: 12px; background: #fafafa; display: flex; flex-direction: column; justify-content: space-between; gap: 8px; }
+  .qr-link-btn { display: inline-block; background: #6a1b9a; color: #fff; text-decoration: none; padding: 8px 10px; border-radius: 8px; font-weight: bold; font-size: 13px; }
+  .qr-link-btn:hover { background: #4a148c; }
+  .qr-url { font-size: 11px; word-break: break-all; color: #4a148c; }
+  .unlock-box { background: #fff8e1; border: 2px solid #ffb300; border-radius: 12px; padding: 14px; margin-top: 14px; }
+  input { font-size: 18px; padding: 7px 12px; width: 170px; text-align: center; border-radius: 8px; border: 1px solid #6a1b9a; direction: ltr; unicode-bidi: isolate; }
+  .btn { background: #6a1b9a; color: #fff; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 15px; }
+  #qr-res { margin-top: 10px; font-weight: bold; min-height: 22px; }
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="top-bar">
+    <div class="timer-pill" id="room-timer">⏱️ 07:50</div>
+    <div class="lang-group">
+      <button class="lang-btn lang-btn-ru active-lang" onclick="setLang('ru')">🇷🇺 Русский</button>
+      <button class="lang-btn lang-btn-he" onclick="setLang('he')">🇮🇱 עברית</button>
+    </div>
+  </div>
+  <h2 data-ru="Задание 3: Зелёное сканирование" data-he="משימה 3: סריקה ירוקה">Задание 3: Зелёное сканирование</h2>
+  <p data-ru="Отсканируйте QR-коды или откройте ссылки. Найдите код и введите его здесь, чтобы получить две цифры и порядок нажатия рычагов (ошибка = -20 сек.):" data-he="סרקו את קודי ה-QR או פתחו את הקישורים. מצאו את הקוד והזינו אותו כאן כדי לקבל שתי ספרות ואת סדר הלחיצה על הידיות (טעות = -20 שניות):">Отсканируйте QR-коды или откройте ссылки. Найдите код и введите его здесь, чтобы получить две цифры и порядок нажатия рычагов (ошибка = -20 сек.):</p>
+
+  <div class="qr-list">
+    <div class="qr-card">
+      <div><strong>QR #1</strong></div>
+      <div id="qr-canvas-1"></div>
+      <a class="qr-link-btn" href="https://en.wikipedia.org/wiki/Air_pollution" target="_blank" rel="noopener noreferrer" data-ru="Открыть ссылку QR #1 ↗" data-he="פתח קישור QR #1 ↗">Открыть ссылку QR #1 ↗</a>
+      <a class="qr-url" href="https://en.wikipedia.org/wiki/Air_pollution" target="_blank" rel="noopener noreferrer">en.wikipedia.org/wiki/Air_pollution</a>
+    </div>
+    <div class="qr-card">
+      <div><strong>QR #2</strong></div>
+      <div id="qr-canvas-2"></div>
+      <a class="qr-link-btn" href="https://en.wikipedia.org/wiki/Particulate_matter" target="_blank" rel="noopener noreferrer" data-ru="Открыть ссылку QR #2 ↗" data-he="פתח קישור QR #2 ↗">Открыть ссылку QR #2 ↗</a>
+      <a class="qr-url" href="https://en.wikipedia.org/wiki/Particulate_matter" target="_blank" rel="noopener noreferrer">en.wikipedia.org/wiki/Particulate_matter</a>
+    </div>
+    <div class="qr-card">
+      <div><strong>QR #3</strong></div>
+      <div id="qr-canvas-3"></div>
+      <a class="qr-link-btn" href="https://en.wikipedia.org/wiki/Sustainable_development" target="_blank" rel="noopener noreferrer" data-ru="Открыть ссылку QR #3 ↗" data-he="פתח קישור QR #3 ↗">Открыть ссылку QR #3 ↗</a>
+      <a class="qr-url" href="https://en.wikipedia.org/wiki/Sustainable_development" target="_blank" rel="noopener noreferrer">en.wikipedia.org/wiki/Sustainable_development</a>
+    </div>
+    <div class="qr-card">
+      <div><strong>QR #4</strong></div>
+      <div id="qr-canvas-4"></div>
+      <a class="qr-link-btn" href="qr4_code_page.html" target="_blank" rel="noopener noreferrer" data-ru="Открыть страницу QR #4 ↗" data-he="פתח עמוד QR #4 ↗">Открыть страницу QR #4 ↗</a>
+      <a class="qr-url" href="qr4_code_page.html" target="_blank" rel="noopener noreferrer">qr4_code_page.html</a>
+    </div>
+  </div>
+
+  <div class="unlock-box">
+    <div>
+      <strong data-ru="Введите найденный код:" data-he="הזינו את הקוד שגיליתם:">Введите найденный код:</strong>
+    </div>
+    <input id="qr-code" type="text" placeholder="____" dir="ltr" />
+    <button class="btn" onclick="checkQRCode()" data-ru="Проверить код" data-he="בדוק קוד">Проверить код</button>
+    <div id="qr-res"></div>
+  </div>
+</div>
+
+<script>
+
+const PENALTY_SEC = 20;
+const INITIAL_SEC = 7 * 60 + 50;
+
+function getLang() {
+  const saved = localStorage.getItem('codeNatureLang');
+  if (saved === 'he' || saved === 'ru') return saved;
+  localStorage.setItem('codeNatureLang', 'ru');
+  return 'ru';
+}
+
+function setLang(lang) {
+  const normalized = lang === 'he' ? 'he' : 'ru';
+  localStorage.setItem('codeNatureLang', normalized);
+  window.dispatchEvent(new CustomEvent('codeNatureLangChanged', { detail: normalized }));
+  applyLangDOM(normalized);
+}
+
+function applyLangDOM(lang) {
+  const isRu = lang === 'ru';
+  document.documentElement.lang = isRu ? 'ru' : 'he';
+  document.documentElement.dir = isRu ? 'ltr' : 'rtl';
+  document.querySelectorAll('[data-ru]').forEach((el) => {
+    const val = isRu ? el.getAttribute('data-ru') : el.getAttribute('data-he');
+    if (val !== null) {
+      if (el.getAttribute('data-html') === '1') {
+        el.innerHTML = val;
+      } else {
+        el.textContent = val;
+      }
+    }
+  });
+  document.querySelectorAll('.lang-btn-ru').forEach((b) => {
+    b.classList.toggle('active-lang', isRu);
+  });
+  document.querySelectorAll('.lang-btn-he').forEach((b) => {
+    b.classList.toggle('active-lang', !isRu);
+  });
+}
+
+function getRemainingSec() {
+  const saved = localStorage.getItem('codeNatureTimerSec');
+  if (saved === null) {
+    localStorage.setItem('codeNatureTimerSec', String(INITIAL_SEC));
+    return INITIAL_SEC;
+  }
+  const n = parseInt(saved, 10);
+  return Number.isNaN(n) ? INITIAL_SEC : Math.max(0, n);
+}
+
+function setRemainingSec(sec) {
+  const clamped = Math.max(0, sec);
+  localStorage.setItem('codeNatureTimerSec', String(clamped));
+  window.dispatchEvent(new CustomEvent('codeNatureTimerUpdated', { detail: clamped }));
+  return clamped;
+}
+
+function applyWrongPenalty() {
+  const cur = getRemainingSec();
+  return setRemainingSec(cur - PENALTY_SEC);
+}
+
+function markRoomSolved(roomNum, payload) {
+  const solved = JSON.parse(localStorage.getItem('codeNatureSolvedRooms') || '{}');
+  solved[roomNum] = payload || true;
+  localStorage.setItem('codeNatureSolvedRooms', JSON.stringify(solved));
+  window.dispatchEvent(new CustomEvent('codeNatureProgressUpdated', { detail: solved }));
+}
+
+function getSolvedRooms() {
+  return JSON.parse(localStorage.getItem('codeNatureSolvedRooms') || '{}');
+}
+
+function formatSec(sec) {
+  const m = String(Math.floor(sec / 60)).padStart(2, '0');
+  const s = String(sec % 60).padStart(2, '0');
+  return `${m}:${s}`;
+}
+
+
+function drawPatternQR(containerId, seedText) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const size = 21;
+  const cell = 5;
+  let hash = 2166136261;
+  for (let i = 0; i < seedText.length; i++) {
+    hash ^= seedText.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  const canvas = document.createElement('canvas');
+  canvas.width = size * cell;
+  canvas.height = size * cell;
+  canvas.style.borderRadius = '6px';
+  canvas.style.border = '1px solid #d1c4e9';
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  function isFinder(r, c) {
+    return (r < 7 && c < 7) || (r < 7 && c >= size - 7) || (r >= size - 7 && c < 7);
+  }
+  function drawFinderBox(ox, oy) {
+    ctx.fillStyle = '#1b1b1b';
+    ctx.fillRect(ox * cell, oy * cell, 7 * cell, 7 * cell);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect((ox + 1) * cell, (oy + 1) * cell, 5 * cell, 5 * cell);
+    ctx.fillStyle = '#1b1b1b';
+    ctx.fillRect((ox + 2) * cell, (oy + 2) * cell, 3 * cell, 3 * cell);
+  }
+
+  for (let r = 0; r < size; r++) {
+    for (let c = 0; c < size; c++) {
+      if (isFinder(r, c)) continue;
+      const mix = ((hash >>> ((r * 7 + c) % 24)) ^ (r * 31 + c * 17)) & 1;
+      if (mix === 1) {
+        ctx.fillStyle = '#1b1b1b';
+        ctx.fillRect(c * cell, r * cell, cell, cell);
+      }
+    }
+  }
+  drawFinderBox(0, 0);
+  drawFinderBox(size - 7, 0);
+  drawFinderBox(0, size - 7);
+  el.innerHTML = '';
+  el.appendChild(canvas);
+}
+
+drawPatternQR('qr-canvas-1', 'https://en.wikipedia.org/wiki/Air_pollution');
+drawPatternQR('qr-canvas-2', 'https://en.wikipedia.org/wiki/Particulate_matter');
+drawPatternQR('qr-canvas-3', 'https://en.wikipedia.org/wiki/Sustainable_development');
+drawPatternQR('qr-canvas-4', 'qr4_code_page.html');
+
+function renderSolvedState3() {
+  const solved = getSolvedRooms();
+  const r = document.getElementById('qr-res');
+  const lang = getLang();
+  if (solved[3]) {
+    r.style.color = '#1b5e20';
+    r.innerHTML = lang === 'ru'
+      ? `✅ Верно! Две цифры: <strong>${solved[3].digits}</strong>. Порядок нажатия рычагов: <span dir="ltr" style="unicode-bidi:isolate"><strong>${solved[3].levers}</strong></span>.`
+      : `✅ נכון! שתי הספרות: <strong>${solved[3].digits}</strong>. סדר הלחיצה על הידיות: <span dir="ltr" style="unicode-bidi:isolate"><strong>${solved[3].levers}</strong></span>.`;
+  }
+}
+
+function syncTimerBadge() {
+  document.getElementById('room-timer').textContent = '⏱️ ' + formatSec(getRemainingSec());
+}
+window.addEventListener('storage', () => { syncTimerBadge(); applyLangDOM(getLang()); renderSolvedState3(); });
+window.addEventListener('codeNatureTimerUpdated', syncTimerBadge);
+window.addEventListener('codeNatureProgressUpdated', renderSolvedState3);
+window.addEventListener('codeNatureLangChanged', (e) => { applyLangDOM(e.detail); renderSolvedState3(); });
+setInterval(() => { syncTimerBadge(); renderSolvedState3(); }, 500);
+syncTimerBadge();
+applyLangDOM(getLang());
+renderSolvedState3();
+
+function checkQRCode() {
+  const val = document.getElementById('qr-code').value.trim().toUpperCase();
+  const r = document.getElementById('qr-res');
+  const lang = getLang();
+  if (val === 'ECO9') {
+    markRoomSolved(3, { digits: "19", levers: "3 - 1 - 6 - 2 - 5 - 4" });
+    renderSolvedState3();
+  } else {
+    applyWrongPenalty();
+    syncTimerBadge();
+    r.style.color = '#c62828';
+    r.textContent = lang === 'ru'
+      ? '❌ Неверный код! Списано 20 секунд с таймера.'
+      : '❌ קוד שגוי! ירדו 20 שניות מהטיימר.';
+  }
+}
+</script>
+</body>
+</html>

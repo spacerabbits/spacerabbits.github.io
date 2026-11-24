@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<title data-ru="Задание 1: Шифр природы" data-he="משימה 1: שיפר הטבע">Задание 1: Шифр природы</title>
+<style>
+  body { font-family: 'Assistant', 'Rubik', Arial, sans-serif; background: #e8f5e9; color: #1b2e1e; margin: 0; padding: 18px; }
+  .box { max-width: 720px; margin: auto; background: #fff; border-radius: 14px; padding: 20px; border: 2px solid #2e7d32; }
+  .top-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+  .timer-pill { font-weight: bold; font-size: 17px; color: #c62828; background: #ffebee; border: 1px solid #ef5350; padding: 6px 12px; border-radius: 8px; font-family: monospace; }
+  
+  .lang-group { display: inline-flex; gap: 6px; align-items: center; }
+  .lang-btn { background: #ffffff; color: #1b5e20; border: 2px solid #2e7d32; padding: 6px 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px; }
+  .lang-btn.active-lang { background: #1b5e20; color: #ffffff; border-color: #ffffff; }
+
+  .key-table { width: 100%; border-collapse: collapse; margin: 14px 0; text-align: center; direction: ltr; }
+  .key-table th, .key-table td { border: 1px solid #66bb6a; padding: 10px; font-size: 18px; }
+  .key-table th { background: #2e7d32; color: #fff; }
+  .cipher-stream { background: #fffde7; border: 2px dashed #fbc02d; border-radius: 12px; padding: 16px; text-align: center; margin: 16px 0; }
+  .symbols-row { font-size: 34px; letter-spacing: 14px; margin: 10px 0; direction: ltr; unicode-bidi: isolate; }
+  input { font-size: 22px; padding: 8px 14px; width: 180px; text-align: center; border-radius: 8px; border: 2px solid #2e7d32; letter-spacing: 4px; direction: ltr; unicode-bidi: isolate; }
+  .btn { background: #2e7d32; color: #fff; border: none; padding: 10px 20px; font-size: 16px; border-radius: 8px; cursor: pointer; margin-top: 10px; }
+  .res { margin-top: 14px; font-weight: bold; font-size: 17px; min-height: 24px; }
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="top-bar">
+    <div class="timer-pill" id="room-timer">⏱️ 07:50</div>
+    <div class="lang-group">
+      <button class="lang-btn lang-btn-ru active-lang" onclick="setLang('ru')">🇷🇺 Русский</button>
+      <button class="lang-btn lang-btn-he" onclick="setLang('he')">🇮🇱 עברית</button>
+    </div>
+  </div>
+  <h2 data-ru="Задание 1: Шифр природы" data-he="משימה 1: שיפר הטבע">Задание 1: Шифр природы</h2>
+  <p data-ru="Переведите цепочку символов (слева направо) в цифры по таблице ключа и введите полный код, чтобы получить первые 2 цифры (ошибка = -20 сек.):" data-he="המירו את רצף הסמלים משמאל לימין למספרים לפי טבלת המפתח והזינו את הקוד המלא לקבלת 2 הספרות הראשונות (טעות = -20 שניות):">Переведите цепочку символов (слева направо) в цифры по таблице ключа и введите полный код, чтобы получить первые 2 цифры (ошибка = -20 сек.):</p>
+
+  <table class="key-table">
+    <thead>
+      <tr>
+        <th>🌿</th>
+        <th>💧</th>
+        <th>🌱</th>
+        <th>☀️</th>
+        <th data-ru="Символ" data-he="סמל">Символ</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>4</strong></td>
+        <td><strong>2</strong></td>
+        <td><strong>7</strong></td>
+        <td><strong>5</strong></td>
+        <td><strong data-ru="Цифра" data-he="ספרה">Цифра</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="cipher-stream">
+    <div><strong data-ru="Цепочка символов (слева направо):" data-he="רצף הסמלים (משמאל לימין):">Цепочка символов (слева направо):</strong></div>
+    <div class="symbols-row" dir="ltr">🌿 &nbsp; 💧 &nbsp; 🌱 &nbsp; ☀️</div>
+    <input id="code-in" type="text" maxlength="4" placeholder="____" dir="ltr" />
+    <br>
+    <button class="btn" onclick="checkCipher()" data-ru="Проверить код" data-he="בדוק קוד">Проверить код</button>
+  </div>
+  <div class="res" id="res"></div>
+</div>
+
+<script>
+
+const PENALTY_SEC = 20;
+const INITIAL_SEC = 7 * 60 + 50;
+
+function getLang() {
+  const saved = localStorage.getItem('codeNatureLang');
+  if (saved === 'he' || saved === 'ru') return saved;
+  localStorage.setItem('codeNatureLang', 'ru');
+  return 'ru';
+}
+
+function setLang(lang) {
+  const normalized = lang === 'he' ? 'he' : 'ru';
+  localStorage.setItem('codeNatureLang', normalized);
+  window.dispatchEvent(new CustomEvent('codeNatureLangChanged', { detail: normalized }));
+  applyLangDOM(normalized);
+}
+
+function applyLangDOM(lang) {
+  const isRu = lang === 'ru';
+  document.documentElement.lang = isRu ? 'ru' : 'he';
+  document.documentElement.dir = isRu ? 'ltr' : 'rtl';
+  document.querySelectorAll('[data-ru]').forEach((el) => {
+    const val = isRu ? el.getAttribute('data-ru') : el.getAttribute('data-he');
+    if (val !== null) {
+      if (el.getAttribute('data-html') === '1') {
+        el.innerHTML = val;
+      } else {
+        el.textContent = val;
+      }
+    }
+  });
+  document.querySelectorAll('.lang-btn-ru').forEach((b) => {
+    b.classList.toggle('active-lang', isRu);
+  });
+  document.querySelectorAll('.lang-btn-he').forEach((b) => {
+    b.classList.toggle('active-lang', !isRu);
+  });
+}
+
+function getRemainingSec() {
+  const saved = localStorage.getItem('codeNatureTimerSec');
+  if (saved === null) {
+    localStorage.setItem('codeNatureTimerSec', String(INITIAL_SEC));
+    return INITIAL_SEC;
+  }
+  const n = parseInt(saved, 10);
+  return Number.isNaN(n) ? INITIAL_SEC : Math.max(0, n);
+}
+
+function setRemainingSec(sec) {
+  const clamped = Math.max(0, sec);
+  localStorage.setItem('codeNatureTimerSec', String(clamped));
+  window.dispatchEvent(new CustomEvent('codeNatureTimerUpdated', { detail: clamped }));
+  return clamped;
+}
+
+function applyWrongPenalty() {
+  const cur = getRemainingSec();
+  return setRemainingSec(cur - PENALTY_SEC);
+}
+
+function markRoomSolved(roomNum, payload) {
+  const solved = JSON.parse(localStorage.getItem('codeNatureSolvedRooms') || '{}');
+  solved[roomNum] = payload || true;
+  localStorage.setItem('codeNatureSolvedRooms', JSON.stringify(solved));
+  window.dispatchEvent(new CustomEvent('codeNatureProgressUpdated', { detail: solved }));
+}
+
+function getSolvedRooms() {
+  return JSON.parse(localStorage.getItem('codeNatureSolvedRooms') || '{}');
+}
+
+function formatSec(sec) {
+  const m = String(Math.floor(sec / 60)).padStart(2, '0');
+  const s = String(sec % 60).padStart(2, '0');
+  return `${m}:${s}`;
+}
+
+
+const TARGET = "4275";
+
+function renderSolvedState1() {
+  const solved = getSolvedRooms();
+  const r = document.getElementById('res');
+  const lang = getLang();
+  if (solved[1]) {
+    r.style.color = '#1b5e20';
+    r.textContent = lang === 'ru'
+      ? `✅ Верно! Первые 2 цифры: ${solved[1].digits}.`
+      : `✅ נכון! 2 הספרות הראשונות: ${solved[1].digits}.`;
+  }
+}
+
+function syncTimerBadge() {
+  document.getElementById('room-timer').textContent = '⏱️ ' + formatSec(getRemainingSec());
+}
+window.addEventListener('storage', () => { syncTimerBadge(); applyLangDOM(getLang()); renderSolvedState1(); });
+window.addEventListener('codeNatureTimerUpdated', syncTimerBadge);
+window.addEventListener('codeNatureProgressUpdated', renderSolvedState1);
+window.addEventListener('codeNatureLangChanged', (e) => { applyLangDOM(e.detail); renderSolvedState1(); });
+setInterval(() => { syncTimerBadge(); renderSolvedState1(); }, 500);
+syncTimerBadge();
+applyLangDOM(getLang());
+renderSolvedState1();
+
+function checkCipher() {
+  const val = document.getElementById('code-in').value.trim();
+  const r = document.getElementById('res');
+  const lang = getLang();
+  if (val === TARGET) {
+    markRoomSolved(1, { digits: "42" });
+    renderSolvedState1();
+  } else {
+    applyWrongPenalty();
+    syncTimerBadge();
+    r.style.color = '#c62828';
+    r.textContent = lang === 'ru'
+      ? '❌ Неверный код! Списано 20 секунд с таймера.'
+      : '❌ קוד שגוי! ירדו 20 שניות מהטיימר.';
+  }
+}
+</script>
+</body>
+</html>

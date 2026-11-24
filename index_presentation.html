@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-ru="Операция «Код природы» — презентация квест-комнаты" data-he="מבצע &quot;קוד הטבע&quot; — מצגת חדר בריחה">Операция «Код природы» — презентация квест-комнаты</title>
+<style>
+  :root {
+    --primary: #1b5e20;
+    --secondary: #2e7d32;
+    --accent: #00796b;
+    --bg: #f1f8e9;
+    --card: #ffffff;
+    --text: #1b2e1e;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: 'Assistant', 'Rubik', Arial, sans-serif; font-size: 18px; background: var(--bg); color: var(--text); margin: 0; padding: 0; }
+  header { background: var(--primary); color: #fff; padding: 12px 22px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+  header h2 { margin: 0; font-size: 19px; }
+  .hud { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .timer-badge { background: #c62828; color: #fff; padding: 6px 14px; border-radius: 8px; font-weight: bold; font-size: 17px; font-family: monospace; }
+  .btn { background: #ffffff; color: var(--primary); border: none; padding: 8px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 19px; }
+  
+  .lang-group { display: inline-flex; gap: 6px; align-items: center; }
+  .lang-btn { background: #ffffff; color: #1b5e20; border: 2px solid #2e7d32; padding: 6px 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 15px; }
+  .lang-btn.active-lang { background: #1b5e20; color: #ffffff; border-color: #ffffff; }
+
+  .slide-nav { display: flex; justify-content: center; flex-wrap: wrap; gap: 7px; padding: 10px; background: #dcedc8; border-bottom: 1px solid #aed581; }
+  .nav-pill { background: #fff; border: 1px solid var(--secondary); color: var(--primary); padding: 6px 12px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 15px; }
+  .nav-pill.active { background: var(--secondary); color: #fff; }
+  .slide { display: none; max-width: 1700px; margin: 120px auto 20px auto; background: var(--card); border-radius: 16px; padding: 24px; box-shadow: 0 6px 20px rgba(0,0,0,0.08); border: 2px solid #a5d6a7; }
+  .slide.active { display: block; }
+  h1 { color: var(--primary); margin-top: 0; font-size: 25px; }
+  h3 { color: var(--accent); margin-bottom: 6px; }
+  .badge { display: inline-block; background: #e8f5e9; border: 1px solid #4caf50; padding: 5px 11px; border-radius: 8px; font-weight: bold; margin: 3px; font-size: 14px; }
+  .grid-2 { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 18px; margin-top: 14px; }
+  @media (max-width: 880px) { .grid-2 { grid-template-columns: 1fr; } }
+  .req-list { padding-inline-start: 20px; margin: 0; }
+  .req-list li { margin-bottom: 8px; line-height: 1.48; font-size: 18px; }
+  .task-panel { background: #f9fbe7; border: 2px solid #8bc34a; border-radius: 14px; padding: 12px; }
+  .link-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 6px; }
+  .ext-link { display: inline-block; background: var(--accent); color: #fff; text-decoration: none; padding: 6px 12px; border-radius: 7px; font-weight: bold; font-size: 15px; }
+  iframe { width: 100%; height: 470px; border: 1px solid #c5e1a5; border-radius: 10px; background: #fff; }
+  table { width: 100%; border-collapse: collapse; margin-top: 14px; }
+  th, td { border: 1px solid #a5d6a7; padding: 9px; text-align: start; font-size: 15px; }
+  th { background: #2e7d32; color: #fff; }
+  .footer-nav { display: flex; justify-content: space-between; max-width: 1700px; margin: 0 auto 28px auto; padding: 0 10px; }
+  .live-answer-box { margin-top: 12px; padding: 12px 14px; border-radius: 10px; background: #e8f5e9; border: 2px solid #4caf50; color: #1b5e20; font-weight: bold; display: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <h2 data-ru="Операция «Код природы» — презентация квест-комнаты" data-he="מבצע &quot;קוד הטבע&quot; — מצגת חדר בריחה">Операция «Код природы» — презентация квест-комнаты</h2>
+  <div class="hud">
+    <div class="lang-group">
+      <button class="lang-btn lang-btn-ru active-lang" onclick="setLang('ru')">🇷🇺 Русский</button>
+      <button class="lang-btn lang-btn-he" onclick="setLang('he')">🇮🇱 עברית</button>
+    </div>
+    <div class="timer-badge">⏱️ <span id="global-timer">07:50</span></div>
+    <button class="btn" onclick="startGlobalTimer()" data-ru="▶ Пуск" data-he="▶ הפעל">▶ Пуск</button>
+    <button class="btn" onclick="resetGlobalTimer()" data-ru="↺ Сброс" data-he="↺ אפס">↺ Сброс</button>
+  </div>
+</header>
+
+<div class="slide-nav" id="slide-nav"></div>
+
+<section class="slide active" id="slide-0">
+  <h1 data-ru="Слайд 1: Операция «Код природы» — обезвреживание бомбы и спасение растений" data-he="שקף 1: מבצע &quot;קוד הטבע&quot; — נטרול פצצה והצלת הצמחים">Слайд 1: Операция «Код природы» — обезвреживание бомбы и спасение растений</h1>
+  <div>
+    <span class="badge" data-ru="Контекст: охрана окружающей среды и спасение редких растений" data-he="הקשר: שמירה על איכות הסביבה והצלת צמחים נדירים">Контекст: охрана окружающей среды и спасение редких растений</span>
+    <span class="badge" data-ru="Аудитория: 7–9 классы" data-he="קהל יעד: כיתות ז'–ט'">Аудитория: 7–9 классы</span>
+    <span class="badge" data-ru="Время: 07:50" data-he="זמן: 7:50 דקות">Время: 07:50</span>
+  </div>
+  <h3 data-ru="Участники команды:" data-he="צוות המשתתפים:">Участники команды:</h3>
+  <p data-ru="Ростислав Склярский, Михаил Гурвич, Григорий Збродский, Марк Дэмб" data-he="רוסטיסלב סקליארסקי, מיכאל גורביץ', גריגוריי זברודסקיי, מרק דמב">Ростислав Склярский, Михаил Гурвич, Григорий Збродский, Марк Дэмб</p>
+  <h3 data-ru="Сюжет:" data-he="סיפור המסגרת:">Сюжет:</h3>
+  <p data-ru="В экологической лаборатории запущена бомба с таймером 07:50. Если не ввести полный код вовремя, бомба взорвётся и уничтожит редкие растения в лаборатории. Участники проходят задания, решают головоломки, собирают подсказки и части кода, помня о важности охраны окружающей среды и спасения растений." data-he="במעבדה הסביבתית הופעלה פצצה עם טיימר של 7:50 דקות. אם לא יוזן הקוד המלא בזמן, הפצצה תתפוצץ ותשמיד את הצמחים הנדירים במעבדה. המשתתפים עוברים בין המשימות, פותרים חידות, אוספים רמזים וחלקי קוד ומזכירים לעצמם את חשיבות השמירה על הסביבה והצלת הצמחים.">В экологической лаборатории запущена бомба с таймером 07:50. Если не ввести полный код вовремя, бомба взорвётся и уничтожит редкие растения в лаборатории. Участники проходят задания, решают головоломки, собирают подсказки и части кода, помня о важности охраны окружающей среды и спасения растений.</p>
+  <h3 data-ru="Правила и инструкции:" data-he="כללים והוראות:">Правила и инструкции:</h3>
+  <ul class="req-list">
+    <li data-html="1" data-ru="<strong>Ограничение по времени:</strong> ровно 7 минут 50 секунд." data-he="<strong>מגבלת זמן:</strong> 7 דקות ו-50 שניות בדיוק."><strong>Ограничение по времени:</strong> ровно 7 минут 50 секунд.</li>
+    <li data-html="1" data-ru="<strong>Штраф за ошибку:</strong> каждый неверный ответ списывает 20 секунд с таймера (-20 сек.)." data-he="<strong>עונש על טעות:</strong> כל תשובה שגויה מורידה 20 שניות מהטיימר (-20 שניות)."><strong>Штраф за ошибку:</strong> каждый неверный ответ списывает 20 секунд с таймера (-20 сек.).</li>
+    <li data-html="1" data-ru="<strong>Порядок прохождения:</strong> решайте задания, собирайте части кода и введите полный код в финале." data-he="<strong>אופן הפתרון:</strong> פתרו את המשימות, אספו את חלקי הקוד והזינו את הקוד המלא בסיום."><strong>Порядок прохождения:</strong> решайте задания, собирайте части кода и введите полный код в финале.</li>
+    <li data-html="1" data-ru="<strong>Бережное отношение:</strong> не прилагать силу к оборудованию, экранам и элементам." data-he="<strong>שמירה על ציוד:</strong> אין להפעיל כוח פיזי על ציוד, מסכים או רכיבים."><strong>Бережное отношение:</strong> не прилагать силу к оборудованию, экранам и элементам.</li>
+  </ul>
+</section>
+
+<section class="slide" id="slide-1">
+  <h1 data-ru="Слайд 2: Список заданий и ссылки на HTML-файлы" data-he="שקף 2: רשימת המשימות וקישורים לקבצי HTML">Слайд 2: Список заданий и ссылки на HTML-файлы</h1>
+  <table>
+    <thead>
+      <tr>
+        <th data-ru="Задание" data-he="משימה">Задание</th>
+        <th data-ru="Описание" data-he="תיאור הפעילות">Описание</th>
+        <th data-ru="Файл" data-he="קישור לקובץ HTML">Файл</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td data-ru="Задание 1: Шифр природы" data-he="משימה 1: שיפר הטבע">Задание 1: Шифр природы</td>
+        <td data-ru="Перевод символов в цифры по таблице и ввод кода" data-he="המרת סמלים לספרות לפי טבלת המפתח והזנת הקוד">Перевод символов в цифры по таблице и ввод кода</td>
+        <td><a class="ext-link" href="room1_nature_cipher.html" target="_blank">room1_nature_cipher.html ↗</a></td>
+      </tr>
+      <tr>
+        <td data-ru="Задание 2: Эко-Саймон" data-he="משימה 2: סיימון אקולוגי">Задание 2: Эко-Саймон</td>
+        <td data-ru="Игра на память в 3 этапа" data-he="משחק זיכרון ב-3 שלבים">Игра на память в 3 этапа</td>
+        <td><a class="ext-link" href="room2_eco_simon.html" target="_blank">room2_eco_simon.html ↗</a></td>
+      </tr>
+      <tr>
+        <td data-ru="Задание 3: Зелёное сканирование" data-he="משימה 3: סריקה ירוקה">Задание 3: Зелёное сканирование</td>
+        <td data-ru="Открытие QR-ссылок, ввод найденного кода, получение цифр и порядка рычагов" data-he="פתיחת קישורי QR, הזנת הקוד שגיליתם וקבלת הספרות וסדר הידיות">Открытие QR-ссылок, ввод найденного кода, получение цифр и порядка рычагов</td>
+        <td><a class="ext-link" href="room3_green_scan.html" target="_blank">room3_green_scan.html ↗</a></td>
+      </tr>
+      <tr>
+        <td data-ru="Задание 4: 6 рычагов" data-he="משימה 4: 6 ידיות">Задание 4: 6 рычагов</td>
+        <td data-ru="Нажатие 6 рычагов в нужном порядке" data-he="לחיצה על 6 ידיות לפי הסדר המתאים">Нажатие 6 рычагов в нужном порядке</td>
+        <td><a class="ext-link" href="room4_button_sequence.html" target="_blank">room4_button_sequence.html ↗</a></td>
+      </tr>
+      <tr>
+        <td data-ru="Финальный этап" data-he="שלב סיום: נטרול פצצה">Финальный этап</td>
+        <td data-ru="Ввод полного кода для обезвреживания бомбы и спасения растений" data-he="הזנת הקוד המלא לנטרול הפצצה והצלת הצמחים">Ввод полного кода для обезвреживания бомбы и спасения растений</td>
+        <td><a class="ext-link" href="central_room_lock.html" target="_blank">central_room_lock.html ↗</a></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="slide" id="slide-2">
+  <h1 data-ru="Слайд 3: Задание 1 — «Шифр природы»" data-he="שקף 3: משימה 1 — &quot;שיפר הטבע&quot;">Слайд 3: Задание 1 — «Шифр природы»</h1>
+  <div class="grid-2">
+    <div>
+      <ul class="req-list">
+        <li data-html="1" data-ru="<strong>1. Подсказка:</strong> таблица соответствия символов природы и цифр." data-he="<strong>1. הרמז:</strong> טבלת המרה שבה לכל סמל טבע מותאמת ספרה."><strong>1. Подсказка:</strong> таблица соответствия символов природы и цифр.</li>
+        <li data-html="1" data-ru="<strong>2. На экране:</strong> таблица ключа сверху, цепочка символов и поле ввода кода." data-he="<strong>2. מה רואים על המסך:</strong> טבלת מפתח למעלה, שורת סמלים ותיבת הזנת קוד."><strong>2. На экране:</strong> таблица ключа сверху, цепочка символов и поле ввода кода.</li>
+        <li data-html="1" data-ru="<strong>3. Как вводить ответ:</strong> перевести символы слева направо по таблице и вписать в поле." data-he="<strong>3. איך מכניסים תשובה:</strong> ממירים את הסמלים משמאל לימין לפי הטבלה ומקלידים בתיבה."><strong>3. Как вводить ответ:</strong> перевести символы слева направо по таблице и вписать в поле.</li>
+        <li data-html="1" data-ru="<strong>4. При ошибке:</strong> списывается 20 секунд с таймера (-20 сек.)." data-he="<strong>4. מה קורה אם טועים:</strong> יורדות 20 שניות מהטיימר (-20 שניות)."><strong>4. При ошибке:</strong> списывается 20 секунд с таймера (-20 сек.).</li>
+        <li data-html="1" data-ru="<strong>5. Связь с экологией:</strong> символы природы обозначают ресурсы, которые нужно беречь в лаборатории." data-he="<strong>5. חיבור לקיימות:</strong> סמלי הטבע מייצגים משאבים סביבתיים שיש לשמור עליהם במעבדה."><strong>5. Связь с экологией:</strong> символы природы обозначают ресурсы, которые нужно беречь в лаборатории.</li>
+      </ul>
+      <div class="live-answer-box" id="slide-answer-1"></div>
+    </div>
+    <div class="task-panel">
+      <div class="link-row">
+        <strong data-ru="Задание:" data-he="משימה:">Задание:</strong>
+        <a class="ext-link" href="room1_nature_cipher.html" target="_blank" data-ru="Открыть HTML-файл ↗" data-he="פתח קובץ HTML ↗">Открыть HTML-файл ↗</a>
+      </div>
+      <iframe src="room1_nature_cipher.html"></iframe>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="slide-3">
+  <h1 data-ru="Слайд 4: Задание 2 — «Эко-Саймон»" data-he="שקף 4: משימה 2 — &quot;סיימון אקולוגי&quot;">Слайд 4: Задание 2 — «Эко-Саймон»</h1>
+  <div class="grid-2">
+    <div>
+      <ul class="req-list">
+        <li data-html="1" data-ru="<strong>1. Подсказка:</strong> следите за последовательностью сигналов экосистемы." data-he="<strong>1. הרמז:</strong> עקבו אחר רצף ההבהובים של המערכת האקולוגית."><strong>1. Подсказка:</strong> следите за последовательностью сигналов экосистемы.</li>
+        <li data-html="1" data-ru="<strong>2. На экране:</strong> 4 цветные кнопки и 3 этапа на память." data-he="<strong>2. מה רואים על המסך:</strong> 4 כפתורים צבעוניים ו-3 שלבי זיכרון."><strong>2. На экране:</strong> 4 цветные кнопки и 3 этапа на память.</li>
+        <li data-html="1" data-ru="<strong>3. Как вводить ответ:</strong> повторить последовательность цветов на каждом этапе по порядку." data-he="<strong>3. איך מכניסים תשובה:</strong> חוזרים על רצף הצבעים בכל שלב לפי הסדר."><strong>3. Как вводить ответ:</strong> повторить последовательность цветов на каждом этапе по порядку.</li>
+        <li data-html="1" data-ru="<strong>4. При ошибке:</strong> списывается 20 секунд с таймера (-20 сек.), этап начинается заново." data-he="<strong>4. מה קורה אם טועים:</strong> יורדות 20 שניות מהטיימר (-20 שניות) והשלב מתחיל מחדש."><strong>4. При ошибке:</strong> списывается 20 секунд с таймера (-20 сек.), этап начинается заново.</li>
+        <li data-html="1" data-ru="<strong>5. Связь с экологией:</strong> поддержание стабильной работы «зелёных» систем лаборатории." data-he="<strong>5. חיבור לקיימות:</strong> שמירה על יציבות מערכות החשמל הירוקות במעבדה."><strong>5. Связь с экологией:</strong> поддержание стабильной работы «зелёных» систем лаборатории.</li>
+      </ul>
+      <div class="live-answer-box" id="slide-answer-2"></div>
+    </div>
+    <div class="task-panel">
+      <div class="link-row">
+        <strong data-ru="Задание:" data-he="משימה:">Задание:</strong>
+        <a class="ext-link" href="room2_eco_simon.html" target="_blank" data-ru="Открыть HTML-файл ↗" data-he="פתח קובץ HTML ↗">Открыть HTML-файл ↗</a>
+      </div>
+      <iframe src="room2_eco_simon.html"></iframe>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="slide-4">
+  <h1 data-ru="Слайд 5: Задание 3 — «Зелёное сканирование»" data-he="שקף 5: משימה 3 — &quot;סריקה ירוקה&quot;">Слайд 5: Задание 3 — «Зелёное сканирование»</h1>
+  <div class="grid-2">
+    <div>
+      <ul class="req-list">
+        <li data-html="1" data-ru="<strong>1. Подсказка:</strong> отсканируйте QR-коды или откройте ссылки, чтобы найти код." data-he="<strong>1. הרמז:</strong> סרקו את קודי ה-QR או פתחו את הקישורים כדי למצוא את הקוד."><strong>1. Подсказка:</strong> отсканируйте QR-коды или откройте ссылки, чтобы найти код.</li>
+        <li data-html="1" data-ru="<strong>2. На экране:</strong> 4 QR-кода со ссылками и поле для проверки найденного кода." data-he="<strong>2. מה רואים על המסך:</strong> 4 קודי QR וקישורים, ותיבת אימות לקוד שתגלו."><strong>2. На экране:</strong> 4 QR-кода со ссылками и поле для проверки найденного кода.</li>
+        <li data-html="1" data-ru="<strong>3. Как вводить ответ:</strong> ввести найденный код в поле проверки, чтобы получить две цифры и порядок рычагов." data-he="<strong>3. איך מכניסים תשובה:</strong> מזינים את הקוד שמצאתם בתיבת האימות כדי לקבל שתי ספרות ואת סדר הידיות."><strong>3. Как вводить ответ:</strong> ввести найденный код в поле проверки, чтобы получить две цифры и порядок рычагов.</li>
+        <li data-html="1" data-ru="<strong>4. При ошибке:</strong> неверный код списывает 20 секунд с таймера (-20 сек.)." data-he="<strong>4. מה קורה אם טועים:</strong> קוד שגוי מוריד 20 שניות מהטיימר (-20 שניות)."><strong>4. При ошибке:</strong> неверный код списывает 20 секунд с таймера (-20 сек.).</li>
+        <li data-html="1" data-ru="<strong>5. Связь с экологией:</strong> экологическая информация и подготовка запуска систем для следующего задания." data-he="<strong>5. חיבור לקיימות:</strong> מידע סביבתי והכנת הפעלת המערכות למשימה הבאה."><strong>5. Связь с экологией:</strong> экологическая информация и подготовка запуска систем для следующего задания.</li>
+      </ul>
+      <div class="live-answer-box" id="slide-answer-3"></div>
+    </div>
+    <div class="task-panel">
+      <div class="link-row">
+        <strong data-ru="Задание:" data-he="משימה:">Задание:</strong>
+        <a class="ext-link" href="room3_green_scan.html" target="_blank" data-ru="Открыть HTML-файл ↗" data-he="פתח קובץ HTML ↗">Открыть HTML-файл ↗</a>
+      </div>
+      <iframe src="room3_green_scan.html"></iframe>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="slide-5">
+  <h1 data-ru="Слайд 6: Задание 4 — «6 рычагов»" data-he="שקף 6: משימה 4 — &quot;6 ידיות&quot;">Слайд 6: Задание 4 — «6 рычагов»</h1>
+  <div class="grid-2">
+    <div>
+      <ul class="req-list">
+        <li data-html="1" data-ru="<strong>1. Подсказка:</strong> используйте порядок рычагов, полученный в 3-м задании." data-he="<strong>1. הרמז:</strong> השתמשו בסדר הידיות שהתקבל במשימה השלישית."><strong>1. Подсказка:</strong> используйте порядок рычагов, полученный в 3-м задании.</li>
+        <li data-html="1" data-ru="<strong>2. На экране:</strong> панель с 6 рычагами и кнопка сброса." data-he="<strong>2. מה רואים על המסך:</strong> לוח עם 6 ידיות וכפתור איפוס."><strong>2. На экране:</strong> панель с 6 рычагами и кнопка сброса.</li>
+        <li data-html="1" data-ru="<strong>3. Как вводить ответ:</strong> нажать 6 рычагов в нужном порядке." data-he="<strong>3. איך מכניסים תשובה:</strong> לוחצים על 6 הידיות בסדר המתאים."><strong>3. Как вводить ответ:</strong> нажать 6 рычагов в нужном порядке.</li>
+        <li data-html="1" data-ru="<strong>4. При ошибке:</strong> списывается 20 секунд с таймера (-20 сек.), рычаги сбрасываются." data-he="<strong>4. מה קורה אם טועים:</strong> יורדות 20 שניות מהטיימר (-20 שניות) והידיות מתאפסות."><strong>4. При ошибке:</strong> списывается 20 секунд с таймера (-20 сек.), рычаги сбрасываются.</li>
+        <li data-html="1" data-ru="<strong>5. Связь с экологией:</strong> точный запуск защитных систем лаборатории." data-he="<strong>5. חיבור לקיימות:</strong> הפעלה מדויקת של מערכות ההגנה של המעבדה."><strong>5. Связь с экологией:</strong> точный запуск защитных систем лаборатории.</li>
+      </ul>
+      <div class="live-answer-box" id="slide-answer-4"></div>
+    </div>
+    <div class="task-panel">
+      <div class="link-row">
+        <strong data-ru="Задание:" data-he="משימה:">Задание:</strong>
+        <a class="ext-link" href="room4_button_sequence.html" target="_blank" data-ru="Открыть HTML-файл ↗" data-he="פתח קובץ HTML ↗">Открыть HTML-файл ↗</a>
+      </div>
+      <iframe src="room4_button_sequence.html"></iframe>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="slide-6">
+  <h1 data-ru="Слайд 7: Финальный этап — обезвреживание бомбы и спасение растений" data-he="שקף 7: שלב סיום — נטרול פצצה והצלת הצמחים">Слайд 7: Финальный этап — обезвреживание бомбы и спасение растений</h1>
+  <div class="grid-2">
+    <div>
+      <ul class="req-list">
+        <li data-html="1" data-ru="<strong>1. Подсказка:</strong> соберите полный код из цифр, открытых в решённых заданиях." data-he="<strong>1. הרמז:</strong> הרכיבו את הקוד המלא מתוך הספרות שנפתחו במשימות שפתרתם."><strong>1. Подсказка:</strong> соберите полный код из цифр, открытых в решённых заданиях.</li>
+        <li data-html="1" data-ru="<strong>2. На экране:</strong> таймер 07:50, блок открытых цифр и поле ввода кода." data-he="<strong>2. מה רואים על המסך:</strong> טיימר 07:50, תצוגת הספרות שנפתחו ותיבת הזנה לקוד."><strong>2. На экране:</strong> таймер 07:50, блок открытых цифр и поле ввода кода.</li>
+        <li data-html="1" data-ru="<strong>3. Как вводить ответ:</strong> ввести полный код и нажать «Обезвредить бомбу»." data-he="<strong>3. איך מכניסים תשובה:</strong> מקלידים את הקוד המלא ולוחצים על &quot;נטרל פצצה&quot;."><strong>3. Как вводить ответ:</strong> ввести полный код и нажать «Обезвредить бомбу».</li>
+        <li data-html="1" data-ru="<strong>4. При ошибке:</strong> -20 секунд с таймера; если время выйдет — бомба взорвётся и растения пострадают." data-he="<strong>4. מה קורה אם טועים:</strong> יורדות 20 שניות מהטיימר (-20 שניות); אם הזמן נגמר — הפצצה מתפוצצת והצמחים נפגעים."><strong>4. При ошибке:</strong> -20 секунд с таймера; если время выйдет — бомба взорвётся и растения пострадают.</li>
+        <li data-html="1" data-ru="<strong>5. Связь с экологией:</strong> спасение редких растений и зелёной лаборатории." data-he="<strong>5. חיבור לקיימות:</strong> הצלת הצמחים הנדירים והמעבדה הירוקה."><strong>5. Связь с экологией:</strong> спасение редких растений и зелёной лаборатории.</li>
+      </ul>
+      <div class="live-answer-box" id="slide-answer-final"></div>
+    </div>
+    <div class="task-panel">
+      <div class="link-row">
+        <strong data-ru="Задание:" data-he="משימה:">Задание:</strong>
+        <a class="ext-link" href="central_room_lock.html" target="_blank" data-ru="Открыть HTML-файл ↗" data-he="פתח קובץ HTML ↗">Открыть HTML-файл ↗</a>
+      </div>
+      <iframe src="central_room_lock.html"></iframe>
+    </div>
+  </div>
+</section>
+
+<div class="footer-nav">
+  <button class="btn" style="background:#2e7d32; color:#fff;" onclick="prevSlide()" data-ru="◀ Назад" data-he="◀ הקודם">◀ Назад</button>
+  <button class="btn" style="background:#2e7d32; color:#fff;" onclick="nextSlide()" data-ru="Далее ▶" data-he="הבא ▶">Далее ▶</button>
+</div>
+
+<script>
+
+const PENALTY_SEC = 20;
+const INITIAL_SEC = 7 * 60 + 50;
+
+function getLang() {
+  const saved = localStorage.getItem('codeNatureLang');
+  if (saved === 'he' || saved === 'ru') return saved;
+  localStorage.setItem('codeNatureLang', 'ru');
+  return 'ru';
+}
+
+function setLang(lang) {
+  const normalized = lang === 'he' ? 'he' : 'ru';
+  localStorage.setItem('codeNatureLang', normalized);
+  window.dispatchEvent(new CustomEvent('codeNatureLangChanged', { detail: normalized }));
+  applyLangDOM(normalized);
+}
+
+function applyLangDOM(lang) {
+  const isRu = lang === 'ru';
+  document.documentElement.lang = isRu ? 'ru' : 'he';
+  document.documentElement.dir = isRu ? 'ltr' : 'rtl';
+  document.querySelectorAll('[data-ru]').forEach((el) => {
+    const val = isRu ? el.getAttribute('data-ru') : el.getAttribute('data-he');
+    if (val !== null) {
+      if (el.getAttribute('data-html') === '1') {
+        el.innerHTML = val;
+      } else {
+        el.textContent = val;
+      }
+    }
+  });
+  document.querySelectorAll('.lang-btn-ru').forEach((b) => {
+    b.classList.toggle('active-lang', isRu);
+  });
+  document.querySelectorAll('.lang-btn-he').forEach((b) => {
+    b.classList.toggle('active-lang', !isRu);
+  });
+}
+
+function getRemainingSec() {
+  const saved = localStorage.getItem('codeNatureTimerSec');
+  if (saved === null) {
+    localStorage.setItem('codeNatureTimerSec', String(INITIAL_SEC));
+    return INITIAL_SEC;
+  }
+  const n = parseInt(saved, 10);
+  return Number.isNaN(n) ? INITIAL_SEC : Math.max(0, n);
+}
+
+function setRemainingSec(sec) {
+  const clamped = Math.max(0, sec);
+  localStorage.setItem('codeNatureTimerSec', String(clamped));
+  window.dispatchEvent(new CustomEvent('codeNatureTimerUpdated', { detail: clamped }));
+  return clamped;
+}
+
+function applyWrongPenalty() {
+  const cur = getRemainingSec();
+  return setRemainingSec(cur - PENALTY_SEC);
+}
+
+function markRoomSolved(roomNum, payload) {
+  const solved = JSON.parse(localStorage.getItem('codeNatureSolvedRooms') || '{}');
+  solved[roomNum] = payload || true;
+  localStorage.setItem('codeNatureSolvedRooms', JSON.stringify(solved));
+  window.dispatchEvent(new CustomEvent('codeNatureProgressUpdated', { detail: solved }));
+}
+
+function getSolvedRooms() {
+  return JSON.parse(localStorage.getItem('codeNatureSolvedRooms') || '{}');
+}
+
+function formatSec(sec) {
+  const m = String(Math.floor(sec / 60)).padStart(2, '0');
+  const s = String(sec % 60).padStart(2, '0');
+  return `${m}:${s}`;
+}
+
+
+let currentSlide = 0;
+const totalSlides = 7;
+
+let globalSec = getRemainingSec();
+let globalTimer = null;
+
+function renderSlideAnswers() {
+  const solved = getSolvedRooms();
+  const lang = getLang();
+
+  const b1 = document.getElementById('slide-answer-1');
+  if (solved[1]) {
+    b1.style.display = 'block';
+    b1.textContent = lang === 'ru'
+      ? `Результат задания 1: ${solved[1].digits}`
+      : `תוצאת משימה 1: ${solved[1].digits}`;
+  } else {
+    b1.style.display = 'none';
+    b1.textContent = '';
+  }
+
+  const b2 = document.getElementById('slide-answer-2');
+  if (solved[2]) {
+    b2.style.display = 'block';
+    b2.textContent = lang === 'ru'
+      ? `Результат задания 2: ${solved[2].digits}`
+      : `תוצאת משימה 2: ${solved[2].digits}`;
+  } else {
+    b2.style.display = 'none';
+    b2.textContent = '';
+  }
+
+  const b3 = document.getElementById('slide-answer-3');
+  if (solved[3]) {
+    b3.style.display = 'block';
+    b3.innerHTML = lang === 'ru'
+      ? `Результат задания 3: цифры <strong>${solved[3].digits}</strong>, порядок рычагов: <span dir="ltr" style="unicode-bidi:isolate"><strong>${solved[3].levers}</strong></span>`
+      : `תוצאת משימה 3: ספרות <strong>${solved[3].digits}</strong>, סדר ידיות: <span dir="ltr" style="unicode-bidi:isolate"><strong>${solved[3].levers}</strong></span>`;
+  } else {
+    b3.style.display = 'none';
+    b3.innerHTML = '';
+  }
+
+  const b4 = document.getElementById('slide-answer-4');
+  if (solved[4]) {
+    b4.style.display = 'block';
+    b4.textContent = lang === 'ru'
+      ? `Результат задания 4: ${solved[4].digits}`
+      : `תוצאת משימה 4: ${solved[4].digits}`;
+  } else {
+    b4.style.display = 'none';
+    b4.textContent = '';
+  }
+
+  const bFin = document.getElementById('slide-answer-final');
+  const openParts = [];
+  if (solved[1]) openParts.push((lang === 'ru' ? 'Задание 1: ' : 'משימה 1: ') + solved[1].digits);
+  if (solved[2]) openParts.push((lang === 'ru' ? 'Задание 2: ' : 'משימה 2: ') + solved[2].digits);
+  if (solved[3]) openParts.push((lang === 'ru' ? 'Задание 3: ' : 'משימה 3: ') + solved[3].digits);
+  if (solved[4]) openParts.push((lang === 'ru' ? 'Задание 4: ' : 'משימה 4: ') + solved[4].digits);
+  if (openParts.length > 0) {
+    bFin.style.display = 'block';
+    bFin.textContent = (lang === 'ru' ? 'Открытые части кода: ' : 'חלקי קוד שנפתחו: ') + openParts.join(' | ');
+  } else {
+    bFin.style.display = 'none';
+    bFin.textContent = '';
+  }
+}
+
+function renderGlobalTimer() {
+  document.getElementById('global-timer').textContent = formatSec(globalSec);
+}
+
+function startGlobalTimer() {
+  if (globalTimer !== null) return;
+  globalTimer = setInterval(() => {
+    globalSec = getRemainingSec();
+    if (globalSec <= 0) {
+      clearInterval(globalTimer);
+      globalTimer = null;
+      setRemainingSec(0);
+      document.getElementById('global-timer').textContent = '00:00';
+      return;
+    }
+    globalSec = setRemainingSec(globalSec - 1);
+    renderGlobalTimer();
+  }, 1000);
+}
+
+function resetGlobalTimer() {
+  if (globalTimer !== null) {
+    clearInterval(globalTimer);
+    globalTimer = null;
+  }
+  localStorage.removeItem('codeNatureSolvedRooms');
+  globalSec = setRemainingSec(INITIAL_SEC);
+  renderGlobalTimer();
+  renderSlideAnswers();
+  startGlobalTimer();
+}
+
+window.addEventListener('storage', () => {
+  globalSec = getRemainingSec();
+  renderGlobalTimer();
+  applyLangDOM(getLang());
+  renderNav();
+  renderSlideAnswers();
+});
+window.addEventListener('codeNatureTimerUpdated', (e) => {
+  globalSec = e.detail;
+  renderGlobalTimer();
+});
+window.addEventListener('codeNatureProgressUpdated', renderSlideAnswers);
+window.addEventListener('codeNatureLangChanged', (e) => {
+  applyLangDOM(e.detail);
+  renderNav();
+  renderSlideAnswers();
+});
+
+setInterval(renderSlideAnswers, 400);
+
+window.addEventListener('load', () => {
+  localStorage.removeItem('codeNatureSolvedRooms');
+  setRemainingSec(INITIAL_SEC);
+  globalSec = INITIAL_SEC;
+  renderGlobalTimer();
+  applyLangDOM(getLang());
+  renderNav();
+  renderSlideAnswers();
+  startGlobalTimer();
+});
+
+const slideTitlesRu = [
+  '1. Титул',
+  '2. Список',
+  '3. Зад. 1',
+  '4. Зад. 2',
+  '5. Зад. 3',
+  '6. Зад. 4',
+  '7. Финал'
+];
+
+const slideTitlesHe = [
+  '1. כותרת',
+  '2. רשימה',
+  '3. משימה 1',
+  '4. משימה 2',
+  '5. משימה 3',
+  '6. משימה 4',
+  '7. סיום'
+];
+
+function renderNav() {
+  const nav = document.getElementById('slide-nav');
+  nav.innerHTML = '';
+  const titles = getLang() === 'ru' ? slideTitlesRu : slideTitlesHe;
+  titles.forEach((title, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'nav-pill' + (idx === currentSlide ? ' active' : '');
+    btn.textContent = title;
+    btn.onclick = () => goSlide(idx);
+    nav.appendChild(btn);
+  });
+}
+
+function goSlide(idx) {
+  document.querySelectorAll('.slide').forEach((s, i) => {
+    s.classList.toggle('active', i === idx);
+  });
+  currentSlide = idx;
+  renderNav();
+}
+
+function nextSlide() { goSlide((currentSlide + 1) % totalSlides); }
+function prevSlide() { goSlide((currentSlide - 1 + totalSlides) % totalSlides); }
+
+applyLangDOM(getLang());
+renderNav();
+renderSlideAnswers();
+</script>
+</body>
+</html>

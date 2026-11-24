@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<title data-ru="Задание 4: 6 рычагов" data-he="משימה 4: 6 ידיות">Задание 4: 6 рычагов</title>
+<style>
+  body { font-family: 'Assistant', 'Rubik', Arial, sans-serif; background: #fff3e0; color: #3e2723; margin: 0; padding: 18px; }
+  .box { max-width: 700px; margin: auto; background: #fff; border-radius: 14px; padding: 20px; border: 2px solid #ef6c00; text-align: center; }
+  .top-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+  .timer-pill { font-weight: bold; font-size: 17px; color: #c62828; background: #ffebee; border: 1px solid #ef5350; padding: 6px 12px; border-radius: 8px; font-family: monospace; }
+  
+  .lang-group { display: inline-flex; gap: 6px; align-items: center; }
+  .lang-btn { background: #ffffff; color: #1b5e20; border: 2px solid #2e7d32; padding: 6px 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px; }
+  .lang-btn.active-lang { background: #1b5e20; color: #ffffff; border-color: #ffffff; }
+
+  .reminder-box { display: none; background: #e8f5e9; border: 1px solid #4caf50; color: #1b5e20; padding: 10px 14px; border-radius: 10px; margin: 12px 0; font-weight: bold; }
+  .levers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 18px 0; direction: ltr; }
+  .lever-btn { background: #ff8f00; color: #fff; border: none; border-radius: 12px; padding: 18px 10px; font-size: 17px; font-weight: bold; cursor: pointer; }
+  .lever-btn.pressed { background: #2e7d32; }
+  .reset-btn { background: #546e7a; color: #fff; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 15px; }
+  .status { font-size: 17px; font-weight: bold; margin-top: 14px; min-height: 24px; }
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="top-bar">
+    <div class="timer-pill" id="room-timer">⏱️ 07:50</div>
+    <div class="lang-group">
+      <button class="lang-btn lang-btn-ru active-lang" onclick="setLang('ru')">🇷🇺 Русский</button>
+      <button class="lang-btn lang-btn-he" onclick="setLang('he')">🇮🇱 עברית</button>
+    </div>
+  </div>
+  <h2 data-ru="Задание 4: Последовательность из 6 рычагов" data-he="משימה 4: רצף של 6 ידיות">Задание 4: Последовательность из 6 рычагов</h2>
+  <p data-ru="Нажмите 6 рычагов в нужном порядке (ошибка = -20 сек.):" data-he="לחצו על 6 הידיות בסדר המתאים (טעות = -20 שניות):">Нажмите 6 рычагов в нужном порядке (ошибка = -20 сек.):</p>
+  <div class="reminder-box" id="room3-reminder"></div>
+  <div id="progress">Прогресс: 0 / 6</div>
+
+  <div class="levers-grid">
+    <button class="lever-btn" id="lv1" onclick="pullLever(1)" data-ru="🕹️ Рычаг 1" data-he="🕹️ ידית 1">🕹️ Рычаг 1</button>
+    <button class="lever-btn" id="lv2" onclick="pullLever(2)" data-ru="🕹️ Рычаг 2" data-he="🕹️ ידית 2">🕹️ Рычаг 2</button>
+    <button class="lever-btn" id="lv3" onclick="pullLever(3)" data-ru="🕹️ Рычаг 3" data-he="🕹️ ידית 3">🕹️ Рычаг 3</button>
+    <button class="lever-btn" id="lv4" onclick="pullLever(4)" data-ru="🕹️ Рычаг 4" data-he="🕹️ ידית 4">🕹️ Рычаг 4</button>
+    <button class="lever-btn" id="lv5" onclick="pullLever(5)" data-ru="🕹️ Рычаг 5" data-he="🕹️ ידית 5">🕹️ Рычаг 5</button>
+    <button class="lever-btn" id="lv6" onclick="pullLever(6)" data-ru="🕹️ Рычаг 6" data-he="🕹️ ידית 6">🕹️ Рычаг 6</button>
+  </div>
+
+  <button class="reset-btn" onclick="resetLevers()" data-ru="Сбросить рычаги" data-he="אפס ידיות">Сбросить рычаги</button>
+  <div class="status" id="status"></div>
+</div>
+
+<script>
+
+const PENALTY_SEC = 20;
+const INITIAL_SEC = 7 * 60 + 50;
+
+function getLang() {
+  const saved = localStorage.getItem('codeNatureLang');
+  if (saved === 'he' || saved === 'ru') return saved;
+  localStorage.setItem('codeNatureLang', 'ru');
+  return 'ru';
+}
+
+function setLang(lang) {
+  const normalized = lang === 'he' ? 'he' : 'ru';
+  localStorage.setItem('codeNatureLang', normalized);
+  window.dispatchEvent(new CustomEvent('codeNatureLangChanged', { detail: normalized }));
+  applyLangDOM(normalized);
+}
+
+function applyLangDOM(lang) {
+  const isRu = lang === 'ru';
+  document.documentElement.lang = isRu ? 'ru' : 'he';
+  document.documentElement.dir = isRu ? 'ltr' : 'rtl';
+  document.querySelectorAll('[data-ru]').forEach((el) => {
+    const val = isRu ? el.getAttribute('data-ru') : el.getAttribute('data-he');
+    if (val !== null) {
+      if (el.getAttribute('data-html') === '1') {
+        el.innerHTML = val;
+      } else {
+        el.textContent = val;
+      }
+    }
+  });
+  document.querySelectorAll('.lang-btn-ru').forEach((b) => {
+    b.classList.toggle('active-lang', isRu);
+  });
+  document.querySelectorAll('.lang-btn-he').forEach((b) => {
+    b.classList.toggle('active-lang', !isRu);
+  });
+}
+
+function getRemainingSec() {
+  const saved = localStorage.getItem('codeNatureTimerSec');
+  if (saved === null) {
+    localStorage.setItem('codeNatureTimerSec', String(INITIAL_SEC));
+    return INITIAL_SEC;
+  }
+  const n = parseInt(saved, 10);
+  return Number.isNaN(n) ? INITIAL_SEC : Math.max(0, n);
+}
+
+function setRemainingSec(sec) {
+  const clamped = Math.max(0, sec);
+  localStorage.setItem('codeNatureTimerSec', String(clamped));
+  window.dispatchEvent(new CustomEvent('codeNatureTimerUpdated', { detail: clamped }));
+  return clamped;
+}
+
+function applyWrongPenalty() {
+  const cur = getRemainingSec();
+  return setRemainingSec(cur - PENALTY_SEC);
+}
+
+function markRoomSolved(roomNum, payload) {
+  const solved = JSON.parse(localStorage.getItem('codeNatureSolvedRooms') || '{}');
+  solved[roomNum] = payload || true;
+  localStorage.setItem('codeNatureSolvedRooms', JSON.stringify(solved));
+  window.dispatchEvent(new CustomEvent('codeNatureProgressUpdated', { detail: solved }));
+}
+
+function getSolvedRooms() {
+  return JSON.parse(localStorage.getItem('codeNatureSolvedRooms') || '{}');
+}
+
+function formatSec(sec) {
+  const m = String(Math.floor(sec / 60)).padStart(2, '0');
+  const s = String(sec % 60).padStart(2, '0');
+  return `${m}:${s}`;
+}
+
+
+const TARGET_ORDER = [3, 1, 6, 2, 5, 4];
+let currentOrder = [];
+
+function updateProgressLabel() {
+  const lang = getLang();
+  document.getElementById('progress').textContent = lang === 'ru'
+    ? `Прогресс: ${currentOrder.length} / 6`
+    : `התקדמות: ${currentOrder.length} / 6`;
+}
+
+function renderSolvedState4() {
+  const solved = getSolvedRooms();
+  const rem = document.getElementById('room3-reminder');
+  const st = document.getElementById('status');
+  const lang = getLang();
+  if (solved[3] && solved[3].levers) {
+    rem.style.display = 'block';
+    rem.innerHTML = lang === 'ru'
+      ? 'Открытый порядок рычагов: <span dir="ltr" style="unicode-bidi:isolate">' + solved[3].levers + '</span>'
+      : 'סדר הידיות שנפתח: <span dir="ltr" style="unicode-bidi:isolate">' + solved[3].levers + '</span>';
+  } else {
+    rem.style.display = 'none';
+  }
+  if (solved[4]) {
+    st.style.color = '#1b5e20';
+    st.textContent = lang === 'ru'
+      ? `✅ Отлично! Последние 2 цифры: ${solved[4].digits}.`
+      : `✅ מעולה! 2 הספרות האחרונות: ${solved[4].digits}.`;
+  }
+}
+
+function syncTimerBadge() {
+  document.getElementById('room-timer').textContent = '⏱️ ' + formatSec(getRemainingSec());
+}
+
+window.addEventListener('storage', () => { syncTimerBadge(); renderSolvedState4(); applyLangDOM(getLang()); updateProgressLabel(); });
+window.addEventListener('codeNatureTimerUpdated', syncTimerBadge);
+window.addEventListener('codeNatureProgressUpdated', renderSolvedState4);
+window.addEventListener('codeNatureLangChanged', (e) => { applyLangDOM(e.detail); updateProgressLabel(); renderSolvedState4(); });
+setInterval(() => { syncTimerBadge(); renderSolvedState4(); }, 500);
+syncTimerBadge();
+renderSolvedState4();
+applyLangDOM(getLang());
+updateProgressLabel();
+
+function resetLevers() {
+  currentOrder = [];
+  updateProgressLabel();
+  for (let i = 1; i <= 6; i++) {
+    document.getElementById('lv' + i).classList.remove('pressed');
+  }
+}
+
+function pullLever(num) {
+  if (currentOrder.length >= 6) return;
+  currentOrder.push(num);
+  document.getElementById('lv' + num).classList.add('pressed');
+  updateProgressLabel();
+
+  if (currentOrder.length === 6) {
+    const ok = currentOrder.every((v, idx) => v === TARGET_ORDER[idx]);
+    const st = document.getElementById('status');
+    const lang = getLang();
+    if (ok) {
+      markRoomSolved(4, { digits: "84" });
+      renderSolvedState4();
+    } else {
+      applyWrongPenalty();
+      syncTimerBadge();
+      st.style.color = '#c62828';
+      st.textContent = lang === 'ru'
+        ? '❌ Неверный порядок! Списано 20 секунд с таймера, рычаги сброшены.'
+        : '❌ סדר שגוי! ירדו 20 שניות מהטיימר והידיות אופסו.';
+      setTimeout(resetLevers, 600);
+    }
+  }
+}
+</script>
+</body>
+</html>
