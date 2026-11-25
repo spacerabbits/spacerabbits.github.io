@@ -1,73 +1,227 @@
+
 <!DOCTYPE html>
 <html lang="ru" dir="ltr">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title data-ru="Центральный зал: обезвреживание бомбы и спасение растений" data-he="חדר מרכזי: נטרול פצצה והצלת צמחים">Центральный зал: обезвреживание бомбы и спасение растений</title>
-<style>
-  body { font-family: 'Assistant', 'Rubik', Arial, sans-serif; background: #e8f5e9; color: #1b2e1e; margin: 0; padding: 18px; }
-  .box { max-width: 580px; margin: auto; background: #fff; border-radius: 16px; padding: 22px; border: 3px solid #1b5e20; text-align: center; }
-  .top-bar { display: flex; justify-content: flex-end; margin-bottom: 8px; }
-  
-  .lang-group { display: inline-flex; gap: 6px; align-items: center; }
-  .lang-btn { background: #ffffff; color: #1b5e20; border: 2px solid #2e7d32; padding: 6px 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px; }
-  .lang-btn.active-lang { background: #1b5e20; color: #ffffff; border-color: #ffffff; }
 
-  .timer-panel { background: #ffebee; border: 2px solid #ef5350; border-radius: 12px; padding: 12px; margin: 14px 0; }
-  .timer-val { font-size: 32px; font-weight: bold; color: #c62828; font-family: monospace; }
-  .t-btn { background: #37474f; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; margin: 4px; font-size: 13px; }
-  .collected-box { background: #f1f8e9; border: 1px dashed #4caf50; border-radius: 10px; padding: 10px; margin: 12px 0; font-size: 15px; min-height: 22px; }
-  input { font-size: 22px; padding: 9px; width: 220px; text-align: center; border-radius: 10px; border: 2px solid #2e7d32; letter-spacing: 3px; direction: ltr; unicode-bidi: isolate; }
-  .btn { background: #1b5e20; color: #fff; border: none; padding: 10px 22px; font-size: 17px; border-radius: 10px; cursor: pointer; margin-top: 10px; }
-  .msg { font-size: 17px; font-weight: bold; margin-top: 14px; min-height: 24px; }
+<style>
+  body {
+    font-family: 'Assistant', 'Rubik', Arial, sans-serif;
+    background: #e8f5e9;
+    color: #1b2e1e;
+    margin: 0;
+    padding: 18px;
+  }
+
+  .box {
+    max-width: 580px;
+    margin: auto;
+    background: #fff;
+    border-radius: 16px;
+    padding: 22px;
+    border: 3px solid #1b5e20;
+    text-align: center;
+  }
+
+  .top-bar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 8px;
+  }
+
+  .lang-group {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .lang-btn {
+    background: #ffffff;
+    color: #1b5e20;
+    border: 2px solid #2e7d32;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 13px;
+  }
+
+  .lang-btn.active-lang {
+    background: #1b5e20;
+    color: #ffffff;
+    border-color: #ffffff;
+  }
+
+  .timer-panel {
+    background: #ffebee;
+    border: 2px solid #ef5350;
+    border-radius: 12px;
+    padding: 12px;
+    margin: 14px 0;
+  }
+
+  .timer-val {
+    font-size: 32px;
+    font-weight: bold;
+    color: #c62828;
+    font-family: monospace;
+  }
+
+  .t-btn {
+    background: #37474f;
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin: 4px;
+    font-size: 13px;
+  }
+
+  .collected-box {
+    background: #f1f8e9;
+    border: 1px dashed #4caf50;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 12px 0;
+    font-size: 15px;
+    min-height: 22px;
+  }
+
+  input {
+    font-size: 22px;
+    padding: 9px;
+    width: 220px;
+    text-align: center;
+    border-radius: 10px;
+    border: 2px solid #2e7d32;
+    letter-spacing: 3px;
+    direction: ltr;
+    unicode-bidi: isolate;
+  }
+
+  .btn {
+    background: #1b5e20;
+    color: #fff;
+    border: none;
+    padding: 10px 22px;
+    font-size: 17px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+
+  .msg {
+    font-size: 17px;
+    font-weight: bold;
+    margin-top: 14px;
+    min-height: 24px;
+  }
 </style>
 </head>
+
 <body>
+
 <div class="box">
+
   <div class="top-bar">
     <div class="lang-group">
       <button class="lang-btn lang-btn-ru active-lang" onclick="setLang('ru')">🇷🇺 Русский</button>
       <button class="lang-btn lang-btn-he" onclick="setLang('he')">🇮🇱 עברית</button>
     </div>
   </div>
+
   <h2 data-ru="Центральный зал: обезвреживание бомбы и спасение растений" data-he="חדר מרכזי: נטרול פצצה והצלת הצמחים">Центральный зал: обезвреживание бомбы и спасение растений</h2>
-  <p data-ru="Введите полный код, чтобы обезвредить бомбу и спасти редкие растения в лаборатории (ошибка = -20 сек.):" data-he="הזינו את הקוד המלא לנטרול הפצצה והצלת הצמחים הנדירים במעבדה (טעות = -20 שניות):">Введите полный код, чтобы обезвредить бомбу и спасти редкие растения в лаборатории (ошибка = -20 сек.):</p>
+
+  <p data-ru="Введите полный код, чтобы обезвредить бомбу и спасти редкие растения в лаборатории (ошибка = -20 сек.):" data-he="הזינו את הקוד המלא לנטרול הפצצה והצלת הצמחים הנדירים במעבדה (טעות = -20 שניות):">
+    Введите полный код, чтобы обезвредить бомбу и спасти редкие растения в лаборатории (ошибка = -20 сек.):
+  </p>
+
   <div class="timer-panel">
     <div>⏱️ <span class="timer-val" id="timer">07:50</span></div>
+
     <button class="t-btn" onclick="startTimer()" data-ru="Пуск" data-he="הפעל">Пуск</button>
+
     <button class="t-btn" onclick="pauseTimer()" data-ru="Пауза" data-he="השהה">Пауза</button>
+
     <button class="t-btn" onclick="resetTimer()" data-ru="Сброс 07:50" data-he="אפס 07:50">Сброс 07:50</button>
   </div>
+
   <div class="collected-box" id="collected-digits"></div>
+
   <input id="code" type="text" maxlength="8" placeholder="________" dir="ltr" />
+
   <br>
-  <button class="btn" onclick="checkFinal()" data-ru="Обезвредить бомбу" data-he="נטרל פצצה">Обезвредить бомбу</button>
+
+  <button class="btn" onclick="checkFinal()" data-ru="Обезвредить бомбу" data-he="נטרל פצצה">
+    Обезвредить бомбу
+  </button>
+
   <div class="msg" id="msg"></div>
+
 </div>
+
 <script>
+
+// ======================================================
+// CONFIGURATION
+// ======================================================
 
 const PENALTY_SEC = 20;
 const INITIAL_SEC = 7 * 60 + 50;
+const FINAL_CODE = "42751984";
+
+// Detect whether this page is inside the main presentation.
+const IS_EMBEDDED = window.self !== window.top;
+
+let totalSec = INITIAL_SEC;
+let timerId = null;
+
+let gameOverShown = false;
+let finalSolved = false;
+
+
+// ======================================================
+// LANGUAGE SYSTEM
+// ======================================================
 
 function getLang() {
   const saved = localStorage.getItem('codeNatureLang');
+
   if (saved === 'he' || saved === 'ru') return saved;
+
   localStorage.setItem('codeNatureLang', 'ru');
+
   return 'ru';
 }
 
 function setLang(lang) {
   const normalized = lang === 'he' ? 'he' : 'ru';
+
   localStorage.setItem('codeNatureLang', normalized);
-  window.dispatchEvent(new CustomEvent('codeNatureLangChanged', { detail: normalized }));
+
+  window.dispatchEvent(
+    new CustomEvent('codeNatureLangChanged', {
+      detail: normalized
+    })
+  );
+
   applyLangDOM(normalized);
 }
 
 function applyLangDOM(lang) {
   const isRu = lang === 'ru';
+
   document.documentElement.lang = isRu ? 'ru' : 'he';
   document.documentElement.dir = isRu ? 'ltr' : 'rtl';
+
   document.querySelectorAll('[data-ru]').forEach((el) => {
-    const val = isRu ? el.getAttribute('data-ru') : el.getAttribute('data-he');
+    const val = isRu
+      ? el.getAttribute('data-ru')
+      : el.getAttribute('data-he');
+
     if (val !== null) {
       if (el.getAttribute('data-html') === '1') {
         el.innerHTML = val;
@@ -76,156 +230,785 @@ function applyLangDOM(lang) {
       }
     }
   });
+
   document.querySelectorAll('.lang-btn-ru').forEach((b) => {
     b.classList.toggle('active-lang', isRu);
   });
+
   document.querySelectorAll('.lang-btn-he').forEach((b) => {
     b.classList.toggle('active-lang', !isRu);
   });
 }
 
+
+// ======================================================
+// SHARED TIMER STORAGE
+// ======================================================
+
 function getRemainingSec() {
   const saved = localStorage.getItem('codeNatureTimerSec');
+
   if (saved === null) {
-    localStorage.setItem('codeNatureTimerSec', String(INITIAL_SEC));
+    localStorage.setItem(
+      'codeNatureTimerSec',
+      String(INITIAL_SEC)
+    );
+
     return INITIAL_SEC;
   }
+
   const n = parseInt(saved, 10);
-  return Number.isNaN(n) ? INITIAL_SEC : Math.max(0, n);
+
+  return Number.isNaN(n)
+    ? INITIAL_SEC
+    : Math.max(0, n);
 }
 
 function setRemainingSec(sec) {
   const clamped = Math.max(0, sec);
-  localStorage.setItem('codeNatureTimerSec', String(clamped));
-  window.dispatchEvent(new CustomEvent('codeNatureTimerUpdated', { detail: clamped }));
+
+  localStorage.setItem(
+    'codeNatureTimerSec',
+    String(clamped)
+  );
+
+  window.dispatchEvent(
+    new CustomEvent('codeNatureTimerUpdated', {
+      detail: clamped
+    })
+  );
+
   return clamped;
 }
 
 function applyWrongPenalty() {
   const cur = getRemainingSec();
+
   return setRemainingSec(cur - PENALTY_SEC);
 }
 
+
+// ======================================================
+// PROGRESS SYSTEM
+// ======================================================
+
 function markRoomSolved(roomNum, payload) {
-  const solved = JSON.parse(localStorage.getItem('codeNatureSolvedRooms') || '{}');
+  const solved = JSON.parse(
+    localStorage.getItem('codeNatureSolvedRooms') || '{}'
+  );
+
   solved[roomNum] = payload || true;
-  localStorage.setItem('codeNatureSolvedRooms', JSON.stringify(solved));
-  window.dispatchEvent(new CustomEvent('codeNatureProgressUpdated', { detail: solved }));
+
+  localStorage.setItem(
+    'codeNatureSolvedRooms',
+    JSON.stringify(solved)
+  );
+
+  window.dispatchEvent(
+    new CustomEvent('codeNatureProgressUpdated', {
+      detail: solved
+    })
+  );
 }
 
 function getSolvedRooms() {
-  return JSON.parse(localStorage.getItem('codeNatureSolvedRooms') || '{}');
+  return JSON.parse(
+    localStorage.getItem('codeNatureSolvedRooms') || '{}'
+  );
 }
 
 function formatSec(sec) {
   const m = String(Math.floor(sec / 60)).padStart(2, '0');
   const s = String(sec % 60).padStart(2, '0');
+
   return `${m}:${s}`;
 }
 
 
-const FINAL_CODE = "42751984";
-let totalSec = getRemainingSec();
-let timerId = null;
+// ======================================================
+// DISPLAY COLLECTED DIGITS
+// ======================================================
 
 function updateCollectedDisplay() {
   const solved = getSolvedRooms();
   const lang = getLang();
+
   const parts = [];
-  if (solved[1]) parts.push((lang === 'ru' ? 'Задание 1: ' : 'משימה 1: ') + solved[1].digits);
-  if (solved[2]) parts.push((lang === 'ru' ? 'Задание 2: ' : 'משימה 2: ') + solved[2].digits);
-  if (solved[3]) parts.push((lang === 'ru' ? 'Задание 3: ' : 'משימה 3: ') + solved[3].digits);
-  if (solved[4]) parts.push((lang === 'ru' ? 'Задание 4: ' : 'משימה 4: ') + solved[4].digits);
+
+  if (solved[1]) {
+    parts.push(
+      (lang === 'ru' ? 'Задание 1: ' : 'משימה 1: ') +
+      solved[1].digits
+    );
+  }
+
+  if (solved[2]) {
+    parts.push(
+      (lang === 'ru' ? 'Задание 2: ' : 'משימה 2: ') +
+      solved[2].digits
+    );
+  }
+
+  if (solved[3]) {
+    parts.push(
+      (lang === 'ru' ? 'Задание 3: ' : 'משימה 3: ') +
+      solved[3].digits
+    );
+  }
+
+  if (solved[4]) {
+    parts.push(
+      (lang === 'ru' ? 'Задание 4: ' : 'משימה 4: ') +
+      solved[4].digits
+    );
+  }
+
   const el = document.getElementById('collected-digits');
+
   el.textContent = parts.length === 0
     ? ''
-    : (lang === 'ru' ? 'Открытые цифры: ' : 'הספרות שנפתחו: ') + parts.join(' | ');
+    : (lang === 'ru'
+        ? 'Открытые цифры: '
+        : 'הספרות שנפתחו: ') + parts.join(' | ');
 }
+
+
+// ======================================================
+// TIMER DISPLAY
+// ======================================================
 
 function renderTime() {
-  document.getElementById('timer').textContent = formatSec(totalSec);
+  document.getElementById('timer').textContent =
+    formatSec(totalSec);
 }
 
+function handleTimerUpdate(value) {
+  totalSec = Math.max(0, Number(value) || 0);
+
+  renderTime();
+
+  if (totalSec <= 0 && !finalSolved) {
+    showGameOver();
+  }
+
+  if (totalSec > 0 && gameOverShown) {
+    hideGameOver();
+  }
+}
+
+
+// ======================================================
+// TIMER START
+// ======================================================
+
 function startTimer() {
-  if (timerId !== null) return;
-  timerId = setInterval(() => {
+
+  // When embedded, the presentation already owns the timer.
+  // Never create another countdown inside the iframe.
+  if (IS_EMBEDDED) {
+    try {
+      if (typeof window.parent.startGlobalTimer === 'function') {
+        window.parent.startGlobalTimer();
+      }
+    } catch (error) {
+      console.warn('Could not access presentation timer.');
+    }
+
     totalSec = getRemainingSec();
+    renderTime();
+
+    return;
+  }
+
+  if (timerId !== null || finalSolved) return;
+
+  timerId = setInterval(() => {
+
+    totalSec = getRemainingSec();
+
     if (totalSec <= 0) {
       clearInterval(timerId);
       timerId = null;
+
       setRemainingSec(0);
-      renderTime();
-      const lang = getLang();
-      document.getElementById('msg').style.color = '#c62828';
-      document.getElementById('msg').textContent = lang === 'ru'
-        ? '⛔ Время вышло! Бомба сработала, растения в лаборатории пострадали.'
-        : '⛔ הזמן הסתיים! הפצצה הופעלה והצמחים במעבדה נפגעו.';
+
+      handleTimerUpdate(0);
+
       return;
     }
+
     totalSec = setRemainingSec(totalSec - 1);
+
     renderTime();
+
   }, 1000);
 }
 
+
+// ======================================================
+// TIMER PAUSE
+// ======================================================
+
 function pauseTimer() {
+
+  if (IS_EMBEDDED) {
+    try {
+      if (typeof window.parent.pauseGlobalTimer === 'function') {
+        window.parent.pauseGlobalTimer();
+      }
+    } catch (error) {
+      console.warn('Could not access presentation pause control.');
+    }
+
+    return;
+  }
+
   if (timerId !== null) {
     clearInterval(timerId);
     timerId = null;
   }
 }
 
+
+// ======================================================
+// TIMER RESET
+// ======================================================
+
 function resetTimer() {
+
+  finalSolved = false;
+
+  // Reset the main presentation timer when embedded.
+  if (IS_EMBEDDED) {
+    try {
+      if (typeof window.parent.resetGlobalTimer === 'function') {
+
+        window.parent.resetGlobalTimer();
+
+        totalSec = getRemainingSec();
+
+        renderTime();
+        updateCollectedDisplay();
+
+        document.getElementById('msg').textContent = '';
+
+        hideGameOver();
+
+        return;
+      }
+    } catch (error) {
+      console.warn('Could not access presentation reset control.');
+    }
+  }
+
   pauseTimer();
+
   localStorage.removeItem('codeNatureSolvedRooms');
+
   totalSec = setRemainingSec(INITIAL_SEC);
+
   renderTime();
+
   updateCollectedDisplay();
+
   document.getElementById('msg').textContent = '';
+
+  hideGameOver();
 }
 
-window.addEventListener('storage', () => {
-  totalSec = getRemainingSec();
-  renderTime();
+
+// ======================================================
+// GAME OVER SCREEN
+// ======================================================
+
+function showGameOver() {
+
+  if (gameOverShown || finalSolved) return;
+
+  gameOverShown = true;
+
+  pauseTimer();
+
+  let targetDoc = document;
+
+  // When embedded, show the Game Over screen over the ENTIRE
+  // presentation, not just inside the small iframe.
+  if (IS_EMBEDDED) {
+    try {
+      targetDoc = window.parent.document;
+    } catch (error) {
+      targetDoc = document;
+    }
+  }
+
+  if (targetDoc.getElementById('codeNatureGameOverOverlay')) {
+    return;
+  }
+
+  // Add animation styles to whichever document owns the overlay.
+  if (!targetDoc.getElementById('codeNatureGameOverStyles')) {
+
+    const style = targetDoc.createElement('style');
+
+    style.id = 'codeNatureGameOverStyles';
+
+    style.textContent = `
+
+      .code-gameover-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 2147483647;
+        background: rgba(10, 15, 10, 0.94);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        overflow: hidden;
+        font-family: Arial, sans-serif;
+        box-sizing: border-box;
+        animation: coOverlayIn .45s ease-out both;
+      }
+
+      .code-gameover-card {
+        position: relative;
+        width: min(520px, 95vw);
+        padding: 28px 22px;
+        border-radius: 22px;
+        border: 4px solid #c62828;
+        background: linear-gradient(145deg, #ffffff, #f1f8e9);
+        text-align: center;
+        overflow: hidden;
+        box-sizing: border-box;
+        box-shadow: 0 0 50px rgba(255, 40, 0, .3);
+      }
+
+      .code-gameover-stage {
+        position: relative;
+        width: 190px;
+        height: 155px;
+        margin: 0 auto 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .code-gameover-bomb {
+        position: absolute;
+        z-index: 3;
+        font-size: 85px;
+        animation: coBombShake .95s ease-in-out forwards;
+      }
+
+      .code-gameover-burst {
+        position: absolute;
+        z-index: 4;
+        font-size: 100px;
+        opacity: 0;
+        animation: coExplosion .9s .8s ease-out forwards;
+      }
+
+      .code-gameover-flash {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: white;
+        opacity: 0;
+        transform: scale(.1);
+        animation: coFlash .85s .82s ease-out forwards;
+      }
+
+      .code-gameover-ring {
+        position: absolute;
+        width: 35px;
+        height: 35px;
+        border: 9px solid #ffb300;
+        border-radius: 50%;
+        opacity: 0;
+        animation: coShockwave .9s .82s ease-out forwards;
+      }
+
+      .code-gameover-spark {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        font-size: 25px;
+        color: #ff9800;
+        opacity: 0;
+        animation: coSpark .9s .85s ease-out forwards;
+        --angle: 0deg;
+      }
+
+      .code-gameover-title {
+        color: #b71c1c;
+        font-size: clamp(30px, 6vw, 44px);
+        font-weight: 900;
+        margin: 5px 0 12px;
+        opacity: 0;
+        animation: coTextIn .6s 1s ease-out forwards;
+      }
+
+      .code-gameover-description {
+        color: #263238;
+        font-size: 18px;
+        line-height: 1.5;
+        margin: 0 auto 22px;
+        opacity: 0;
+        animation: coTextIn .6s 1.2s ease-out forwards;
+      }
+
+      .code-gameover-restart {
+        background: #c62828;
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 13px 25px;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        opacity: 0;
+        animation: coTextIn .5s 1.5s ease-out forwards;
+        transition: background .2s, transform .2s;
+      }
+
+      .code-gameover-restart:hover {
+        background: #8e0000;
+        transform: scale(1.04);
+      }
+
+      @keyframes coOverlayIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+
+      @keyframes coBombShake {
+        0% {
+          transform: scale(.2) rotate(0);
+          opacity: 0;
+        }
+
+        18% {
+          transform: scale(1.15) rotate(-12deg);
+          opacity: 1;
+        }
+
+        30% { transform: scale(1) rotate(12deg); }
+        40% { transform: scale(1.05) rotate(-13deg); }
+        50% { transform: scale(1) rotate(13deg); }
+        60% { transform: scale(1.08) rotate(-14deg); }
+        72% {
+          transform: scale(.95) rotate(12deg);
+          opacity: 1;
+        }
+
+        100% {
+          transform: scale(2.1) rotate(25deg);
+          opacity: 0;
+        }
+      }
+
+      @keyframes coExplosion {
+        0% {
+          transform: scale(.1) rotate(-30deg);
+          opacity: 0;
+        }
+
+        30% {
+          transform: scale(1.4) rotate(10deg);
+          opacity: 1;
+        }
+
+        100% {
+          transform: scale(1.8) rotate(35deg);
+          opacity: 0;
+        }
+      }
+
+      @keyframes coFlash {
+        0% { opacity: 0; transform: scale(.1); }
+        12% { opacity: .95; }
+        100% { opacity: 0; transform: scale(2.8); }
+      }
+
+      @keyframes coShockwave {
+        0% {
+          transform: scale(.1);
+          opacity: 1;
+        }
+
+        100% {
+          transform: scale(5);
+          opacity: 0;
+        }
+      }
+
+      @keyframes coSpark {
+        0% {
+          opacity: 1;
+          transform: rotate(var(--angle)) translateY(0) scale(.5);
+        }
+
+        100% {
+          opacity: 0;
+          transform: rotate(var(--angle)) translateY(-100px) scale(1.5);
+        }
+      }
+
+      @keyframes coTextIn {
+        from {
+          opacity: 0;
+          transform: translateY(18px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+    `;
+
+    targetDoc.head.appendChild(style);
+  }
+
+  const overlay = targetDoc.createElement('div');
+
+  overlay.id = 'codeNatureGameOverOverlay';
+  overlay.className = 'code-gameover-overlay';
+
+  const card = targetDoc.createElement('div');
+  card.className = 'code-gameover-card';
+
+  const stage = targetDoc.createElement('div');
+  stage.className = 'code-gameover-stage';
+
+  const flash = targetDoc.createElement('div');
+  flash.className = 'code-gameover-flash';
+
+  const ring = targetDoc.createElement('div');
+  ring.className = 'code-gameover-ring';
+
+  const bomb = targetDoc.createElement('div');
+  bomb.className = 'code-gameover-bomb';
+  bomb.textContent = '💣';
+
+  const explosion = targetDoc.createElement('div');
+  explosion.className = 'code-gameover-burst';
+  explosion.textContent = '💥';
+
+  stage.appendChild(flash);
+  stage.appendChild(ring);
+  stage.appendChild(bomb);
+  stage.appendChild(explosion);
+
+  // Explosion particles.
+  const angles = [
+    0, 45, 90, 135, 180, 225, 270, 315
+  ];
+
+  angles.forEach((angle) => {
+    const spark = targetDoc.createElement('div');
+
+    spark.className = 'code-gameover-spark';
+    spark.textContent = '✦';
+    spark.style.setProperty('--angle', angle + 'deg');
+
+    stage.appendChild(spark);
+  });
+
+  const title = targetDoc.createElement('div');
+  title.className = 'code-gameover-title';
+
+  const description = targetDoc.createElement('p');
+  description.className = 'code-gameover-description';
+
+  const restart = targetDoc.createElement('button');
+  restart.className = 'code-gameover-restart';
+
+  const lang = getLang();
+
+  title.textContent = lang === 'ru'
+    ? 'GAME OVER'
+    : 'המשחק הסתיים';
+
+  description.textContent = lang === 'ru'
+    ? '💥 Бомба взорвалась! Время вышло. Растения в лаборатории не удалось спасти.'
+    : '💥 הפצצה התפוצצה! הזמן אזל ולא הצלחנו להציל את הצמחים במעבדה.';
+
+  restart.textContent = lang === 'ru'
+    ? '↻ Начать заново'
+    : '↻ התחלה מחדש';
+
+  restart.addEventListener('click', () => {
+    hideGameOver();
+    resetTimer();
+  });
+
+  card.appendChild(stage);
+  card.appendChild(title);
+  card.appendChild(description);
+  card.appendChild(restart);
+
+  overlay.appendChild(card);
+
+  targetDoc.body.appendChild(overlay);
+}
+
+
+// ======================================================
+// REMOVE GAME OVER SCREEN
+// ======================================================
+
+function hideGameOver() {
+
+  const documents = [document];
+
+  if (IS_EMBEDDED) {
+    try {
+      documents.push(window.parent.document);
+    } catch (error) {
+      // Keep current-document cleanup.
+    }
+  }
+
+  documents.forEach((doc) => {
+    const overlay = doc.getElementById(
+      'codeNatureGameOverOverlay'
+    );
+
+    if (overlay) {
+      overlay.remove();
+    }
+  });
+
+  gameOverShown = false;
+}
+
+
+// ======================================================
+// CROSS-PAGE TIMER SYNCHRONIZATION
+// ======================================================
+
+// Changes made in another page or iframe trigger this event.
+window.addEventListener('storage', (event) => {
+
+  if (
+    event.key === 'codeNatureTimerSec' ||
+    event.key === null
+  ) {
+    handleTimerUpdate(getRemainingSec());
+  }
+
   updateCollectedDisplay();
+
   applyLangDOM(getLang());
 });
-window.addEventListener('codeNatureTimerUpdated', (e) => {
-  totalSec = e.detail;
-  renderTime();
+
+window.addEventListener('codeNatureTimerUpdated', (event) => {
+  handleTimerUpdate(event.detail);
 });
-window.addEventListener('codeNatureProgressUpdated', updateCollectedDisplay);
-window.addEventListener('codeNatureLangChanged', (e) => {
-  applyLangDOM(e.detail);
+
+window.addEventListener('codeNatureProgressUpdated', () => {
   updateCollectedDisplay();
 });
 
-window.addEventListener('load', () => {
-  totalSec = getRemainingSec();
-  renderTime();
-  applyLangDOM(getLang());
+window.addEventListener('codeNatureLangChanged', (event) => {
+  applyLangDOM(event.detail);
   updateCollectedDisplay();
-  startTimer();
 });
+
+
+// ======================================================
+// FINAL CODE CHECK
+// ======================================================
 
 function checkFinal() {
+
+  if (gameOverShown || finalSolved) return;
+
   const val = document.getElementById('code').value.trim();
+
   const msg = document.getElementById('msg');
+
   const lang = getLang();
+
+  // Prevent a successful answer after the timer has expired.
+  if (getRemainingSec() <= 0) {
+    handleTimerUpdate(0);
+    return;
+  }
+
   if (val === FINAL_CODE) {
+
+    finalSolved = true;
+
     pauseTimer();
+
     msg.style.color = '#1b5e20';
+
     msg.textContent = lang === 'ru'
       ? '🎉 Победа! Бомба обезврежена, редкие растения в лаборатории спасены!'
       : '🎉 ניצחון! הפצצה נוטרלה והצמחים הנדירים במעבדה ניצלו!';
+
   } else {
+
     totalSec = applyWrongPenalty();
+
     renderTime();
+
+    if (totalSec <= 0) {
+      handleTimerUpdate(0);
+      return;
+    }
+
     msg.style.color = '#c62828';
+
     msg.textContent = lang === 'ru'
       ? '❌ Неверный код! Списано 20 секунд с таймера.'
       : '❌ קוד שגוי! ירדו 20 שניות מהטיימר.';
   }
 }
+
+
+// ======================================================
+// INITIALIZATION
+// ======================================================
+
+window.addEventListener('load', () => {
+
+  totalSec = getRemainingSec();
+
+  renderTime();
+
+  applyLangDOM(getLang());
+
+  updateCollectedDisplay();
+
+  if (IS_EMBEDDED) {
+
+    // The main presentation controls the countdown.
+    // Wait briefly for its initial timer initialization.
+    window.setTimeout(() => {
+
+      totalSec = getRemainingSec();
+
+      handleTimerUpdate(totalSec);
+
+    }, 150);
+
+  } else {
+
+    // Standalone mode: this page owns the countdown.
+    if (totalSec <= 0) {
+      handleTimerUpdate(0);
+    } else {
+      startTimer();
+    }
+  }
+
+});
+
 </script>
+
 </body>
 </html>
+
